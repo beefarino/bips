@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B975EFD5-7A18-4BD0-8711-38734C6F8EB1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CodeOwls.PowerShell.Host</RootNamespace>
+    <AssemblyName>CodeOwls.PowerShell.Host</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\CodeOwls.AssemblyInfo.cs">
+      <Link>Properties\CodeOwls.AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CodeOwls.PowerShell.AssemblyInfo.cs">
+      <Link>Properties\CodeOwls.PowerShell.AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="AutoComplete\AutoCompleteProviderChain.cs" />
+    <Compile Include="AutoComplete\AutoCompleteWalker.cs" />
+    <Compile Include="AutoComplete\CommandAutoCompleteProvider.cs" />
+    <Compile Include="AutoComplete\CommandListAutoCompleteProvider.cs" />
+    <Compile Include="AutoComplete\CompositeAutoCompleteProvider.cs" />
+    <Compile Include="AutoComplete\DriveListAutoCompleteProvider.cs" />
+    <Compile Include="AutoComplete\IAutoCompleteProvider.cs" />
+    <Compile Include="AutoComplete\IAutoCompleteWalker.cs" />
+    <Compile Include="AutoComplete\NullAutoCompleteWalker.cs" />
+    <Compile Include="AutoComplete\PowerShellTabExpansionAutoCompleteProvider.cs" />
+    <Compile Include="AutoComplete\PowerShellTabExpansion2AutoCompleteProvider.cs" />
+    <Compile Include="AutoComplete\ProviderPathAutoCompleteProvider.cs" />
+    <Compile Include="CommandCompleteEventArgs.cs" />
+    <Compile Include="Configuration\ShellConfiguration.cs" />
+    <Compile Include="Configuration\UISettings.cs" />
+    <Compile Include="Configuration\UnsupportedConsoleApplicationConfiguration.cs" />
+    <Compile Include="Console\ConsoleControlKeyStates.cs" />
+    <Compile Include="Console\ConsoleKeyInfo.cs" />
+    <Compile Include="Console\ConsoleSize.cs" />
+    <Compile Include="Exceptions\HostException.cs" />
+    <Compile Include="Exceptions\InvalidUnsupportedConsoleConfigurationException.cs" />
+    <Compile Include="Executors\AsyncCommandExecutorBase.cs" />
+    <Compile Include="Executors\AsyncCommandResult.cs" />
+    <Compile Include="Executors\CommandExecutorState.cs" />
+    <Compile Include="Executors\ExecutionOptions.cs" />
+    <Compile Include="Executors\Executor.cs" />
+    <Compile Include="Executors\ICommandExecutor.cs" />
+    <Compile Include="Executors\IRunnableCommandExecutor.cs" />
+    <Compile Include="ExitEventArgs.cs" />
+    <Compile Include="History\HistoryStack.cs" />
+    <Compile Include="History\HistoryStackWalker.cs" />
+    <Compile Include="History\IHistoryStackWalker.cs" />
+    <Compile Include="History\NullHistoryStackWalker.cs" />
+    <Compile Include="Host\Host.cs" />
+    <Compile Include="Host\HostRawUI.cs" />
+    <Compile Include="Host\HostUI.cs" />
+    <Compile Include="Console\IConsole.cs" />
+    <Compile Include="ProgressRecordEventArgs.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RunspaceCommandExecutor.cs" />
+    <Compile Include="Shell.cs" />
+    <Compile Include="Utility\CurrentDirectoryStack.cs" />
+    <Compile Include="Utility\EventArgs.cs" />
+    <Compile Include="Utility\Extensions.cs" />
+    <Compile Include="Utility\IProfileInfo.cs" />
+    <Compile Include="Utility\NativeUtils.cs" />
+    <Compile Include="Utility\ProfileInfo.cs" />
+    <Compile Include="Utility\PSInternals.cs" />
+    <Compile Include="Utility\PSObjectExtensions.cs" />
+    <Compile Include="Utility\SyncQueue.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

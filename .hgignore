@@ -1,0 +1,17 @@
+syntax: regexp
+
+\.suo$
+\.user$
+setup.exe$
+\.msi$
+\.db$
+\.ndproj$
+_ReSharper
+_Upgrade
+obj
+bin
+NDepend
+\.cache
+~$
+_local
+Variables\.wxi
