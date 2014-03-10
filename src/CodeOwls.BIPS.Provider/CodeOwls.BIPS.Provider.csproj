@@ -7,7 +7,7 @@
     <ProjectGuid>{58B16FDD-FB9F-465B-A3AF-BD160E0D075E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeOwls.BIPS.Provider</RootNamespace>
+    <RootNamespace>CodeOwls.BIPS</RootNamespace>
     <AssemblyName>CodeOwls.BIPS.Provider</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -33,13 +33,13 @@
   <ItemGroup>
     <Reference Include="Microsoft.SQLServer.DTSPipelineWrap, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\..\lib\Microsoft.SQLServer.DTSPipelineWrap.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.SqlServer.DTSRuntimeWrap, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>..\..\lib\x64\Microsoft.SqlServer.DTSRuntimeWrap.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\lib\Microsoft.SqlServer.DTSRuntimeWrap.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -65,8 +65,9 @@
     <Compile Include="DataTypeInfoObjectNodeFactory.cs" />
     <Compile Include="DbProviderInfoNodeFactory.cs" />
     <Compile Include="DtsNameObjectNodeFactory.cs" />
+    <Compile Include="GetDeployedPackageCmdet.cs" />
     <Compile Include="LogProviderInfoNodeFactory.cs" />
-    <Compile Include="PackageNodeFactory.cs" />
+    <Compile Include="PackageInfoNodeFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

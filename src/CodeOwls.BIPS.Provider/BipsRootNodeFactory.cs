@@ -19,8 +19,6 @@ namespace CodeOwls.BIPS
 
         public override IEnumerable<INodeFactory> GetNodeChildren(IContext context)
         {            
-            var packageInfos = Application.GetPackageInfos("", _serverName, null, null);
-            var count = packageInfos.Count;
             var nodes = new List<INodeFactory>();
 
             var connectionInfos = Application.ConnectionInfos.Cast<ConnectionInfo>().ToList();
@@ -35,8 +33,10 @@ namespace CodeOwls.BIPS
             var logInfos = Application.LogProviderInfos.Cast<LogProviderInfo>().ToList();
             nodes.Add(new CollectionNodeFactory<LogProviderInfo>("LogProviders", logInfos, a=>new LogProviderInfoNodeFactory(a)));
 
+            //var packageInfos = Application.GetPackageInfos("", _serverName, null, null); 
+            var packageInfos = Application.GetDtsServerPackageInfos("", _serverName); 
             var packages = packageInfos.Cast<PackageInfo>().ToList();
-            nodes.Add(new CollectionNodeFactory<PackageInfo>("Packages",packages, a => new PackageNodeFactory(a)));
+            nodes.Add(new CollectionNodeFactory<PackageInfo>("Packages",packages, a => new PackageInfoNodeFactory(a)));
 
             return nodes;
         }
