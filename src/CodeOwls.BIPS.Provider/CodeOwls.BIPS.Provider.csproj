@@ -11,6 +11,7 @@
     <AssemblyName>CodeOwls.BIPS.Provider</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,6 +52,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -59,16 +61,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BipsDrive.cs" />
     <Compile Include="BipsRootNodeFactory.cs" />
     <Compile Include="BipsProvider.cs" />
     <Compile Include="CollectionNodeFactory.cs" />
     <Compile Include="DataTypeInfoObjectNodeFactory.cs" />
     <Compile Include="DbProviderInfoNodeFactory.cs" />
+    <Compile Include="DtsErrorNodeFactory.cs" />
     <Compile Include="DtsNameObjectNodeFactory.cs" />
+    <Compile Include="ExecutableNodeFactory.cs" />
     <Compile Include="GetDeployedPackageCmdet.cs" />
     <Compile Include="LogProviderInfoNodeFactory.cs" />
+    <Compile Include="PackageConfigurationNodeFactory.cs" />
     <Compile Include="PackageInfoNodeFactory.cs" />
+    <Compile Include="PackageNodeFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\PackageCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeOwls.PowerShell\CodeOwls.PowerShell.Paths\CodeOwls.PowerShell.Paths.csproj">
