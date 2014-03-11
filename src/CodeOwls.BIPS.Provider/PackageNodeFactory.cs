@@ -1,11 +1,79 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CodeOwls.BIPS.Utility;
 using CodeOwls.PowerShell.Provider.PathNodeProcessors;
 using CodeOwls.PowerShell.Provider.PathNodes;
 using Microsoft.SqlServer.Dts.Runtime;
 
 namespace CodeOwls.BIPS
 {
+    public class SSISFolderNodeFactory : NodeFactoryBase
+    {
+        private readonly string _serverName;
+        private readonly SsisDbFolderDescriptor _folder;
+
+
+        public SSISFolderNodeFactory( string serverName, SsisDbFolderDescriptor folder )
+        {
+            _serverName = serverName;
+            _folder = folder;
+        }
+
+        public override IEnumerable<INodeFactory> GetNodeChildren(IContext context)
+        {
+            return
+                new SsisDbHelper(_serverName).GetProjectsForFolder(_folder)
+                                             .ToList()
+                                             .ConvertAll(p => new SSISProjectNodeFactory(_serverName, p));
+        }
+        public override IPathNode GetNodeValue()
+        {
+            return new ContainerPathNode( _folder, Name );
+        }
+
+        public override string Name
+        {
+            get { return _folder.Name; }
+        }
+    }
+
+    public class SSISProjectNodeFactory : NodeFactoryBase
+    {
+        private readonly string _serverName;
+        private readonly SsisDbProjectDescriptor _input;
+        private readonly PackageCache _packageCache;
+        private SsisDbHelper _helper;
+
+        public SSISProjectNodeFactory(string serverName, SsisDbProjectDescriptor input)
+        {
+            _serverName = serverName;
+            _input = input;
+            _packageCache = new PackageCache(_serverName);
+            _helper = new SsisDbHelper(_serverName);
+        }
+
+        public override IEnumerable<INodeFactory> GetNodeChildren(IContext context)
+        {
+            var packageFiles = _packageCache.LoadPackages(_input.Path);
+
+            return
+                packageFiles.ToList()
+                            .ConvertAll(f => BipsRootNodeFactory.Application.LoadPackage(f, null))
+                            .ConvertAll(p => new PackageNodeFactory(p));
+
+        }
+
+        public override IPathNode GetNodeValue()
+        {
+            return new ContainerPathNode( _input, Name );
+        }
+
+        public override string Name
+        {
+            get { return _input.Name; }
+        }
+    }
+
     public class PackageNodeFactory : NodeFactoryBase
     {
         private readonly Package _package;

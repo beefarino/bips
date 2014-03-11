@@ -15,19 +15,31 @@ namespace CodeOwls.BIPS.Utility
     {
         private readonly string _cacheName;
 
-        public PackageCache( string cacheName )
+        class ProjectPath
+        {
+            public string Folder { get; set; }
+            public string Project { get; set; }
+        }
+
+
+        public PackageCache(string cacheName)
         {
             _cacheName = cacheName;
         }
 
-        public Package LoadPackage(string packagePath)
+        public string[] LoadPackages(string packagePath)
         {
-            return null;
-
-
+            if (! ProjectExistsInCache(packagePath))
+            {
+                var archive = GetProjectArchiveFromServer(packagePath);
+                ExpandProjectArchiveToLocalCache(packagePath, archive);
+            }
+            var projectPath = GetProjectPath(packagePath);
+            var cachePath = GetProjectCachePath(projectPath);
+            return Directory.GetFiles(cachePath, "*.dtsx");
         }
 
-        public string CacheRoot
+        string CacheRoot
         {
             get
             {
@@ -42,23 +54,34 @@ namespace CodeOwls.BIPS.Utility
 
         protected string ApplicationName
         {
-            get { return "BIPS"; }
+            get { return "CodeOwls\\BIPS"; }
+        }
+
+
+        public bool ProjectExistsInCache(string projectPath)
+        {
+            var path = GetProjectPath(projectPath);
+            var cachePath = GetProjectCachePath(path);
+            return Directory.Exists(cachePath);
         }
 
         public string ExpandProjectArchiveToLocalCache(string packagePath, byte[] archive)
         {
             var tempArchive = Path.GetTempFileName();
-            File.WriteAllBytes( tempArchive, archive );
+            File.WriteAllBytes(tempArchive, archive);
+            
             var projectPath = GetProjectPath(packagePath);
-            var cachePath = Path.Combine(CacheRoot, projectPath.Folder);
-            System.IO.Compression.ZipFile.ExtractToDirectory( tempArchive, cachePath );
+            var cachePath = GetProjectCachePath(projectPath);
+            
+            System.IO.Compression.ZipFile.ExtractToDirectory(tempArchive, cachePath);
+            
             return cachePath;
         }
 
-        class ProjectPath
+        private string GetProjectCachePath(ProjectPath projectPath)
         {
-            public string Folder { get; set; }
-            public string Project { get; set; }
+            var cachePath = Path.Combine(CacheRoot, projectPath.Folder);
+            return cachePath;
         }
 
         public byte[] GetProjectArchiveFromServer(string packagePath)
@@ -81,13 +104,15 @@ namespace CodeOwls.BIPS.Utility
 
                     using (var reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read())
+                        if (!reader.Read())
                         {
-                            var ordinal = reader.GetOrdinal("project_stream");
-                            var packageBits = reader.GetSqlBytes(ordinal);
-
-                            return packageBits.Value;
+                            return null;
                         }
+                     
+                        var ordinal = reader.GetOrdinal("project_stream");
+                        var packageBits = reader.GetSqlBytes(ordinal);
+
+                        return packageBits.Value;
                     }
                 }
             }

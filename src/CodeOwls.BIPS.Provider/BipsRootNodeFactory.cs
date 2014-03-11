@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Management.Automation.Runspaces;
+using CodeOwls.BIPS.Utility;
 using CodeOwls.PowerShell.Provider.PathNodeProcessors;
 using CodeOwls.PowerShell.Provider.PathNodes;
 using Microsoft.SqlServer.Dts.Runtime;
@@ -18,7 +20,7 @@ namespace CodeOwls.BIPS
         }
 
         public override IEnumerable<INodeFactory> GetNodeChildren(IContext context)
-        {            
+        {               
             var nodes = new List<INodeFactory>();
 
             var connectionInfos = Application.ConnectionInfos.Cast<ConnectionInfo>().ToList();
@@ -32,11 +34,18 @@ namespace CodeOwls.BIPS
 
             var logInfos = Application.LogProviderInfos.Cast<LogProviderInfo>().ToList();
             nodes.Add(new CollectionNodeFactory<LogProviderInfo>("LogProviders", logInfos, a=>new LogProviderInfoNodeFactory(a)));
-
-            //var packageInfos = Application.GetPackageInfos("", _serverName, null, null); 
+            
             var packageInfos = Application.GetDtsServerPackageInfos("", _serverName); 
-            var packages = packageInfos.Cast<PackageInfo>().ToList();
-            nodes.Add(new CollectionNodeFactory<PackageInfo>("Packages",packages, a => new PackageInfoNodeFactory(a)));
+            var packages = packageInfos.Cast<PackageInfo>();
+            nodes.Add(new CollectionNodeFactory<PackageInfo>("SSIS", packages, a => new PackageInfoNodeFactory(a)));
+
+            packageInfos = Application.GetPackageInfos("", _serverName, null, null);
+            packages = packageInfos.Cast<PackageInfo>();
+            nodes.Add(new CollectionNodeFactory<PackageInfo>("SQLServer", packages, a => new PackageInfoNodeFactory(a)));
+
+            var folders = new SsisDbHelper(_serverName).Folders;
+            nodes.Add(new CollectionNodeFactory<SsisDbFolderDescriptor>("SSISDB", folders, a => new SSISFolderNodeFactory(_serverName, a)));
+
 
             return nodes;
         }
@@ -48,7 +57,7 @@ namespace CodeOwls.BIPS
 
         public override string Name
         {
-            get { return "Application"; }
+            get { return _serverName; }
         }
 
         public static Application Application
