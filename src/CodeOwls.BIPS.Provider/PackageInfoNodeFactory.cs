@@ -49,7 +49,7 @@ namespace CodeOwls.BIPS
                 return null;
             }
 
-            var app = BipsRootNodeFactory.Application;
+            var app = BipsDrive.Application;
             var folderPath = FolderPath;
 
             //var packages = app.GetPackageInfos(folderPath, "talon-sql-2012", null, null);

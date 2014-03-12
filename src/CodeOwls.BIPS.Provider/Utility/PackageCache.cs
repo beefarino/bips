@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.SqlServer.Dts.Runtime;
 
 namespace CodeOwls.BIPS.Utility
 {
     class PackageCache
     {
-        private readonly string _cacheName;
+        private readonly string _serverName;
 
         class ProjectPath
         {
@@ -22,19 +20,30 @@ namespace CodeOwls.BIPS.Utility
         }
 
 
-        public PackageCache(string cacheName)
+        public PackageCache(string serverName)
         {
-            _cacheName = cacheName;
+            _serverName = serverName;            
+            Packages= new List<PackageDescriptor>();
         }
 
-        public string[] LoadPackages(string packagePath)
+        public List<PackageDescriptor> Packages
         {
-            if (! ProjectExistsInCache(packagePath))
+            get;
+            private set;
+        }
+
+        public string[] GetLocalPackageFilePathsForProject(string packagePath)
+        {
+            var projectPath = GetProjectPath(packagePath);
+
+            if (! ProjectExistsInCache(projectPath))
             {
-                var archive = GetProjectArchiveFromServer(packagePath);
+                var helper = new SsisDbHelper(_serverName);
+
+                var archive = helper.GetProjectArchiveFromServer(projectPath.Folder, projectPath.Project);
                 ExpandProjectArchiveToLocalCache(packagePath, archive);
             }
-            var projectPath = GetProjectPath(packagePath);
+            
             var cachePath = GetProjectCachePath(projectPath);
             return Directory.GetFiles(cachePath, "*.dtsx");
         }
@@ -46,7 +55,7 @@ namespace CodeOwls.BIPS.Utility
                 return Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                     ApplicationName,
-                    _cacheName
+                    _serverName
                     );
 
             }
@@ -58,10 +67,9 @@ namespace CodeOwls.BIPS.Utility
         }
 
 
-        public bool ProjectExistsInCache(string projectPath)
+        bool ProjectExistsInCache(ProjectPath projectPath)
         {
-            var path = GetProjectPath(projectPath);
-            var cachePath = GetProjectCachePath(path);
+            var cachePath = GetProjectCachePath(projectPath);
             return Directory.Exists(cachePath);
         }
 
@@ -80,43 +88,10 @@ namespace CodeOwls.BIPS.Utility
 
         private string GetProjectCachePath(ProjectPath projectPath)
         {
-            var cachePath = Path.Combine(CacheRoot, projectPath.Folder);
+            var cachePath = Path.Combine(CacheRoot, projectPath.Folder, projectPath.Project);
             return cachePath;
         }
 
-        public byte[] GetProjectArchiveFromServer(string packagePath)
-        {
-            var connectionString = String.Format(
-                "Data Source={0};Initial Catalog=SSISDB;Integrated Security=True",
-                _cacheName
-                );
-
-            var path = GetProjectPath(packagePath);
-
-            using (var connection =new SqlConnection(connectionString))
-            {
-                connection.Open();
-                using (var cmd = new SqlCommand("execute [ssisdb].[catalog].[get_project] @folder, @project", connection))
-                {
-                    cmd.CommandType = CommandType.Text;
-                    cmd.Parameters.AddWithValue("@folder", path.Folder);
-                    cmd.Parameters.AddWithValue("@project", path.Project);
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (!reader.Read())
-                        {
-                            return null;
-                        }
-                     
-                        var ordinal = reader.GetOrdinal("project_stream");
-                        var packageBits = reader.GetSqlBytes(ordinal);
-
-                        return packageBits.Value;
-                    }
-                }
-            }
-        }
 
         private static ProjectPath GetProjectPath(string packagePath)
         {
@@ -130,6 +105,16 @@ namespace CodeOwls.BIPS.Utility
 
             var path = new ProjectPath {Folder = matches.Groups[1].Value, Project = matches.Groups[2].Value};
             return path;
+        }
+
+        public void Clear()
+        {
+            Packages = new List<PackageDescriptor>();
+            var root = CacheRoot;
+            if (Directory.Exists(root))
+            {
+                Directory.Delete(root, true);
+            }
         }
     }
 }

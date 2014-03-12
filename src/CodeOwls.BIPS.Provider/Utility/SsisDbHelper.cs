@@ -167,6 +167,39 @@ order by p.[Name]
 
             }
         }
+
+        public byte[] GetProjectArchiveFromServer(string folder, string project)
+        {
+            var connectionString = String.Format(
+                "Data Source={0};Initial Catalog=SSISDB;Integrated Security=True",
+                _serverName
+                );
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (var cmd = new SqlCommand("execute [ssisdb].[catalog].[get_project] @folder, @project", connection))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@folder", folder);
+                    cmd.Parameters.AddWithValue("@project", project);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (!reader.Read())
+                        {
+                            return null;
+                        }
+
+                        var ordinal = reader.GetOrdinal("project_stream");
+                        var packageBits = reader.GetSqlBytes(ordinal);
+
+                        return packageBits.Value;
+                    }
+                }
+            }
+        }
+
     }
 
     public class SsisDbPackageDescriptor

@@ -75,8 +75,12 @@
     <Compile Include="PackageConfigurationNodeFactory.cs" />
     <Compile Include="PackageInfoNodeFactory.cs" />
     <Compile Include="PackageNodeFactory.cs" />
+    <Compile Include="PathNodeProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SsisFolderNodeFactory.cs" />
+    <Compile Include="SsisProjectNodeFactory.cs" />
     <Compile Include="Utility\PackageCache.cs" />
+    <Compile Include="Utility\PackageDescriptor.cs" />
     <Compile Include="Utility\SsisDbHelper.cs" />
   </ItemGroup>
   <ItemGroup>
