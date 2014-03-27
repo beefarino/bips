@@ -24,7 +24,7 @@ namespace CodeOwls.BIPS
             return
                 packageFiles.ToList()
                             .ConvertAll(f => BipsDrive.Application.LoadPackage(f, null))
-                            .ConvertAll(p => new PackageNodeFactory(p));
+                            .ConvertAll(p => new PackageNodeFactory( new PackageDescriptor( p, _project.Name )));
 
         }
 
