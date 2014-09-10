@@ -33,7 +33,8 @@ namespace CodeOwls.BIPS
             var nodes = new List<INodeFactory>();
             var metadata = _mainPipe.ComponentMetaDataCollection.Cast<IDTSComponentMetaData100>();
 
-            nodes.Add(new CollectionNodeFactory<IDTSComponentMetaData100>("DataFlow", metadata, c => new DataFlowComponentNodeFactory(c)));
+            nodes.AddRange(metadata.ToList().ConvertAll(c => new DataFlowComponentNodeFactory(c)));
+
             return nodes;
         }
 
