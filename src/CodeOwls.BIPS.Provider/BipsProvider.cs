@@ -22,12 +22,12 @@ namespace CodeOwls.BIPS
             get { return new PathNodeProcessor(Drive); }
         }
 
-        protected override System.Collections.ObjectModel.Collection<PSDriveInfo> InitializeDefaultDrives()
+        /*protected override System.Collections.ObjectModel.Collection<PSDriveInfo> InitializeDefaultDrives()
         {
             var drives = new Collection<PSDriveInfo>();
             drives.Add(new BipsDrive(new PSDriveInfo("BIPS", ProviderInfo, "talon-sql-2012\\", "BIPS DRIVE", null)));
             return drives;
-        }
+        }*/
 
         protected override PSDriveInfo NewDrive(PSDriveInfo drive)
         {

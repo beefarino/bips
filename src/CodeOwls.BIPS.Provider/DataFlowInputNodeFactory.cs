@@ -3,15 +3,14 @@ using System.Linq;
 using CodeOwls.PowerShell.Provider.PathNodeProcessors;
 using CodeOwls.PowerShell.Provider.PathNodes;
 using Microsoft.SqlServer.Dts.Pipeline.Wrapper;
-using Microsoft.SqlServer.Dts.Runtime.Wrapper;
 
 namespace CodeOwls.BIPS
 {
-    public class DataFlowComponentNodeFactory : NodeFactoryBase
+    public class DataFlowInputNodeFactory : NodeFactoryBase
     {
-        private readonly IDTSComponentMetaData100 _input;
+        private readonly IDTSInput100 _input;
 
-        public DataFlowComponentNodeFactory(IDTSComponentMetaData100 input)
+        public DataFlowInputNodeFactory(IDTSInput100 input)
         {
             _input = input;
         }
@@ -20,12 +19,12 @@ namespace CodeOwls.BIPS
         {
             var nodes = new List<INodeFactory>();
 
-            nodes.Add(new CollectionNodeFactory<IDTSInput100>("Inputs", _input.InputCollection.Cast<IDTSInput100>(), c => new DataFlowInputNodeFactory(c)));
-            nodes.Add(new CollectionNodeFactory<IDTSOutput100>("Outputs", _input.OutputCollection.Cast<IDTSOutput100>(), c => new DataFlowOutputNodeFactory(c)));
-            nodes.Add(new CollectionNodeFactory<IDTSRuntimeConnection100>("Connections", _input.RuntimeConnectionCollection.Cast<IDTSRuntimeConnection100>(), c => new DataFlowConnectionNodeFactory(c)));
+            nodes.Add(new CollectionNodeFactory<IDTSInputColumn100>("InputColumns", _input.InputColumnCollection.Cast<IDTSInputColumn100>(), c => new DataFlowInputColumnNodeFactory(c)));
             nodes.Add(new CollectionNodeFactory<IDTSCustomProperty100>("Properties", _input.CustomPropertyCollection.Cast<IDTSCustomProperty100>(), c => new DataFlowPropertyNodeFactory(c)));
-
-            return nodes;
+            nodes.Add(new CollectionNodeFactory<IDTSExternalMetadataColumn100>("Metadata", 
+                _input.ExternalMetadataColumnCollection.Cast<IDTSExternalMetadataColumn100>(), 
+                c => new DataFlowMetadataColumnNodeFactory(c)));
+            return nodes;           
         }
 
         public override IPathNode GetNodeValue()

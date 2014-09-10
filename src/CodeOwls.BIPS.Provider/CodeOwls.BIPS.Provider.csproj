@@ -67,6 +67,13 @@
     <Compile Include="BipsProvider.cs" />
     <Compile Include="CollectionNodeFactory.cs" />
     <Compile Include="DataFlowComponentNodeFactory.cs" />
+    <Compile Include="DataFlowConnectionNodeFactory.cs" />
+    <Compile Include="DataFlowInputColumnNodeFactory.cs" />
+    <Compile Include="DataFlowInputNodeFactory.cs" />
+    <Compile Include="DataFlowMetadataColumnNodeFactory.cs" />
+    <Compile Include="DataFlowOutputColumnNodeFactory.cs" />
+    <Compile Include="DataFlowOutputNodeFactory.cs" />
+    <Compile Include="DataFlowPropertyNodeFactory.cs" />
     <Compile Include="DataTypeInfoObjectNodeFactory.cs" />
     <Compile Include="DbProviderInfoNodeFactory.cs" />
     <Compile Include="DtsErrorNodeFactory.cs" />
