@@ -13,44 +13,34 @@ namespace CodeOwls.BIPS
     public class BipsRootNodeFactory : NodeFactoryBase
     {
         private readonly BipsDrive _drive;
-        private static readonly Application _application = new Application();
+        private readonly Application _application;
 
         public BipsRootNodeFactory(BipsDrive drive)
         {
             _drive = drive;
+            _application = _drive.Application;
         }
 
         public override IEnumerable<INodeFactory> GetNodeChildren(IContext context)
         {               
             var nodes = new List<INodeFactory>();
             var serverName = _drive.Server;
-            var application = BipsDrive.Application; 
 
-            var connectionInfos = application.ConnectionInfos.Cast<ConnectionInfo>().ToList();
-            nodes.Add( new CollectionNodeFactory<ConnectionInfo>( "Connections", connectionInfos, a=>new DtsNameObjectNodeFactory(a) ));
-
-            var typeInfos = application.DataTypeInfos.Cast<DataTypeInfo>().ToList();
-            nodes.Add(new CollectionNodeFactory<DataTypeInfo>("DataTypes", typeInfos, a => new DataTypeInfoObjectNodeFactory(a)));
-
-            var dbInfos = application.DBProviderInfos.Cast<DBProviderInfo>().ToList();
-            nodes.Add(new CollectionNodeFactory<DBProviderInfo>("DbProviders", dbInfos, a => new DbProviderInfoNodeFactory(a)));
-
-            var logInfos = application.LogProviderInfos.Cast<LogProviderInfo>().ToList();
-            nodes.Add(new CollectionNodeFactory<LogProviderInfo>("LogProviders", logInfos, a=>new LogProviderInfoNodeFactory(a)));
+            GetCommonNodeFactories(nodes);
 
             var packages = _drive.PackageCache.Packages;
             if( ! packages.Any() )
             {
                 var progress = new ProgressRecord(1, "Loading Packages", "Loading DTS Packages");
                 context.WriteProgress( progress );
-                var p = LoadDtsPackages(context, progress, application, serverName, string.Empty);
+                var p = LoadDtsPackages(context, progress, Application, serverName, string.Empty);
                 packages.AddRange(p);
                 
                 progress.PercentComplete = 33;
                 progress.StatusDescription = "Loading SQL Packages";
                 context.WriteProgress(progress);
                 
-                p = LoadSqlPackages(context, progress, application, serverName, string.Empty);
+                p = LoadSqlPackages(context, progress, Application, serverName, string.Empty);
                 packages.AddRange(p);
 
                 progress.PercentComplete = 66;
@@ -71,6 +61,26 @@ namespace CodeOwls.BIPS
             return nodes;
         }
 
+        protected void GetCommonNodeFactories(List<INodeFactory> nodes)
+        {
+            var connectionInfos = Application.ConnectionInfos.Cast<ConnectionInfo>().ToList();
+            nodes.Add(new CollectionNodeFactory<ConnectionInfo>("Connections", connectionInfos,
+                a => new DtsNameObjectNodeFactory(a)));
+
+            var typeInfos = Application.DataTypeInfos.Cast<DataTypeInfo>().ToList();
+            nodes.Add(new CollectionNodeFactory<DataTypeInfo>("DataTypes", typeInfos, a => new DataTypeInfoObjectNodeFactory(a)));
+
+            var dbInfos = Application.DBProviderInfos.Cast<DBProviderInfo>().ToList();
+            nodes.Add(new CollectionNodeFactory<DBProviderInfo>("DbProviders", dbInfos, a => new DbProviderInfoNodeFactory(a)));
+
+            var logInfos = Application.LogProviderInfos.Cast<LogProviderInfo>().ToList();
+            nodes.Add(new CollectionNodeFactory<LogProviderInfo>("LogProviders", logInfos,
+                a => new LogProviderInfoNodeFactory(a)));
+
+            var taskInfos = Application.TaskInfos.Cast<TaskInfo>().ToList();
+            nodes.Add(new CollectionNodeFactory<TaskInfo>("Tasks", taskInfos, a => new TaskInfoNodeFactory(a)));
+        }
+
         private IEnumerable<PackageDescriptor> LoadCatalogPackages(IContext context, ProgressRecord progress)
         {
             progress.CurrentOperation = "Loading folders ...";
@@ -88,7 +98,7 @@ namespace CodeOwls.BIPS
                     var paths = _drive.PackageCache.GetLocalPackageFilePathsForProject(item.Path);
                     foreach (var path in paths)
                     {                        
-                        var package = _application.LoadPackage(path, null);
+                        var package = Application.LoadPackage(path, null);
                         packages.Add( new PackageDescriptor( package, item.Path ));
                     }
                 }                
@@ -166,6 +176,11 @@ namespace CodeOwls.BIPS
         public override string Name
         {
             get { return _drive.Server; }
+        }
+
+        protected Application Application
+        {
+            get { return _application; }
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using CodeOwls.BIPS.Utility;
 using CodeOwls.PowerShell.Provider.PathNodeProcessors;
 using CodeOwls.PowerShell.Provider.PathNodes;
+using Microsoft.SqlServer.Dts.Pipeline.Wrapper;
 using Microsoft.SqlServer.Dts.Runtime;
 
 namespace CodeOwls.BIPS
@@ -43,7 +45,7 @@ namespace CodeOwls.BIPS
 
             var properties = _package.Properties.Cast<DtsProperty>();
             children.Add(new CollectionNodeFactory<DtsProperty>("Properties", properties, p => new ObjectNodeFactory<DtsProperty>(p, () => p.Name)));
-
+            
             var warnings = _package.Warnings.Cast<DtsWarning>();
             children.Add(new CollectionNodeFactory<DtsWarning>("Warnings", warnings, p => new ObjectNodeFactory<DtsWarning>(p, () => p.WarningCode.ToString())));
 
@@ -58,6 +60,6 @@ namespace CodeOwls.BIPS
         public override string Name
         {
             get { return _package.Name; }
-        }
+        }        
     }
 }

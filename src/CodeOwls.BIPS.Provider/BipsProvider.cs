@@ -28,9 +28,20 @@ namespace CodeOwls.BIPS
             drives.Add(new BipsDrive(new PSDriveInfo("BIPS", ProviderInfo, "talon-sql-2012\\", "BIPS DRIVE", null)));
             return drives;
         }
+
+        protected override PSDriveInfo NewDrive(PSDriveInfo drive)
+        {
+            var bipsDrive = drive as BipsDrive;
+            if (null != bipsDrive)
+            {
+                return bipsDrive;
+            }
+
+            return new BipsDrive( drive );
+        }
     }
 
-    public class BipsPackageDrive : Drive
+    /*public class BipsPackageDrive : Drive
     {
         private readonly string _packagePath;
         private Package _package;
@@ -65,4 +76,4 @@ namespace CodeOwls.BIPS
         }
     }
     
-}
+*/}

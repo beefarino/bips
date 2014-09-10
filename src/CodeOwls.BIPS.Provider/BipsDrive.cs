@@ -29,7 +29,7 @@ namespace CodeOwls.BIPS
         internal SsisDbHelper SsisDbHelper { get { return _helper; } }
         internal PackageCache PackageCache { get { return _cache; } }
         
-        public static Application Application
+        public Application Application
         {
             get { return _application; }
         }
