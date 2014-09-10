@@ -23,7 +23,7 @@ namespace CodeOwls.BIPS
             nodes.Add(new CollectionNodeFactory<IDTSInput100>("Inputs", _input.InputCollection.Cast<IDTSInput100>(), c => new DataFlowInputNodeFactory(c)));
             nodes.Add(new CollectionNodeFactory<IDTSOutput100>("Outputs", _input.OutputCollection.Cast<IDTSOutput100>(), c => new DataFlowOutputNodeFactory(c)));
             nodes.Add(new CollectionNodeFactory<IDTSRuntimeConnection100>("Connections", _input.RuntimeConnectionCollection.Cast<IDTSRuntimeConnection100>(), c => new DataFlowConnectionNodeFactory(c)));
-            nodes.Add(new CollectionNodeFactory<IDTSCustomProperty100>("Inputs", _input.CustomPropertyCollection.Cast<IDTSCustomProperty100>(), c => new DataFlowPropertyNodeFactory(c)));
+            nodes.Add(new CollectionNodeFactory<IDTSCustomProperty100>("Properties", _input.CustomPropertyCollection.Cast<IDTSCustomProperty100>(), c => new DataFlowPropertyNodeFactory(c)));
 
             return nodes;
         }
