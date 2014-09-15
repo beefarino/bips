@@ -30,7 +30,7 @@ namespace CodeOwls.BIPS
         public override IEnumerable<INodeFactory> GetNodeChildren(IContext context)
         {               
             var nodes = new List<INodeFactory>();
-            var serverName = _drive.Server;
+            var serverName = _drive.DriveRoot;
 
             GetCommonNodeFactories(nodes);
 
@@ -181,7 +181,7 @@ namespace CodeOwls.BIPS
 
         public override string Name
         {
-            get { return _drive.Server; }
+            get { return _drive.DriveRoot; }
         }
 
         protected Application Application

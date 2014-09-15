@@ -25,7 +25,7 @@ properties {
 	$moduleSource = "./src/Modules";
     $metadataAssembly = 'CodeOwls.Bips.Provider.dll';
 
-    $deployPoint = "\\talong-sql-2012\c`$\users\administrator\documents\windowspowershell\modules"
+    $deployPoint = "\\talon-sql-2012\c`$\users\administrator\documents\windowspowershell\modules"
     $deployPointUser = 'talon-sql-2012\Administrator';
     $deployPointPassword = 'Peanutbear7';
 };
@@ -125,6 +125,13 @@ task InstallModule -depends PackageModule -description "installs the module to t
 		
 
 	ls $packagePath | Copy-Item -recurse -Destination $modulePath -Force -verbose;	
+}
+
+task DeployModule -depends PackageModule,_MountDeployPoint -description "installs the module to the deploy point" {
+	$packagePath = get-modulePackageDirectory;
+			
+
+	ls $packagePath | Copy-Item -recurse -Destination $deployPoint -Force -verbose;	
 }
 
 function get-packageDirectory

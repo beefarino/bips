@@ -1,4 +1,5 @@
-﻿using System.Management.Automation;
+﻿using System.IO;
+using System.Management.Automation;
 using CodeOwls.BIPS.Utility;
 using CodeOwls.PowerShell.Provider;
 using Microsoft.SqlServer.Dts.Runtime;
@@ -7,7 +8,7 @@ namespace CodeOwls.BIPS
 {
     public class BipsDrive : Drive
     {
-        private readonly string _server;
+        private readonly string _driveRoot;
         private readonly SsisDbHelper _helper;
         private readonly PackageCache _cache;
         private readonly ServerPackageProxy _proxy;
@@ -20,11 +21,16 @@ namespace CodeOwls.BIPS
 
         public BipsDrive(PSDriveInfo driveInfo) : base(driveInfo)
         {
-            _server = driveInfo.Root.TrimEnd('\\','/');
-            _helper = new SsisDbHelper(_server);
-            _proxy = new ServerPackageProxy(_server);
+            _driveRoot = driveInfo.Root;
+            _helper = new SsisDbHelper(_driveRoot);
             _cache = new PackageCache( this );
 
+            if (File.Exists(_driveRoot) || Directory.Exists(_driveRoot))
+            {
+                return;
+            }
+
+            _proxy = new ServerPackageProxy(_driveRoot); 
             _proxy.Clear();
         }
 
@@ -37,9 +43,9 @@ namespace CodeOwls.BIPS
             get { return _application; }
         }
 
-        public string Server
+        public string DriveRoot
         {
-            get { return _server; }
+            get { return _driveRoot; }
         }
     }
 }

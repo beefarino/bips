@@ -28,13 +28,13 @@ namespace CodeOwls.BIPS
                 fileOrServerPath = matches.Groups[1].Value;
                 path = matches.Groups[2].Value;
 
-                if (! File.Exists(fileOrServerPath))
+                if (File.Exists(fileOrServerPath) || Directory.Exists(fileOrServerPath))
                 {
-                    _root = new BipsRootNodeFactory(_drive);
+                    _root = new BipsFileRootNodeFactory(_drive, fileOrServerPath);
                 }
                 else
                 {
-                    _root = new BipsFileRootNodeFactory(_drive, fileOrServerPath);
+                    _root = new BipsRootNodeFactory(_drive); 
                 }
             }
             
