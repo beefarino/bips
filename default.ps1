@@ -25,9 +25,9 @@ properties {
 	$moduleSource = "./src/Modules";
     $metadataAssembly = 'CodeOwls.Bips.Provider.dll';
 
-    $installPoint = 'talon-sql-2012';
-    $installPointUser = 'talon-sql-2012\Administrator';
-    $installPointPassword = 'Peanutbear7';
+    $deployPoint = "\\talong-sql-2012\c`$\users\administrator\documents\windowspowershell\modules"
+    $deployPointUser = 'talon-sql-2012\Administrator';
+    $deployPointPassword = 'Peanutbear7';
 };
 
 framework '4.0'
@@ -110,21 +110,21 @@ task Uninstall -description "uninstalls the module from the local user module re
 	}
 }
 
-task _MountInstallPoint -description $private {
+task _MountDeployPoint -description $private {
     if( -not( test-path t:\ ))
     {
-        net use T: \\$installPoint\c$ $installPointPassword /USER:$installPointUser
+        net use T: \\$deployPoint\c$ $deploytPointPassword /USER:$deployPointUser
     }
 }
 
 task Install -depends InstallModule -description "installs the module to the local machine";
 
-task InstallModule -depends PackageModule,_MountInstallPoint -description "installs the module to the local user module repository" {
+task InstallModule -depends PackageModule -description "installs the module to the local user module repository" {
 	$packagePath = get-modulePackageDirectory;
 	$modulePath = $Env:PSModulePath -split ';' | select -First 1;
 		
 
-	ls $packagePath | Copy-Item -recurse -Destination "\\$installPoint\c`$\users\administrator\documents\windowspowershell\modules" -Force -verbose;	
+	ls $packagePath | Copy-Item -recurse -Destination $modulePath -Force -verbose;	
 }
 
 function get-packageDirectory

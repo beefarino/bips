@@ -21,7 +21,7 @@ namespace CodeOwls.BIPS
 
             GetCommonNodeFactories( nodes );
 
-            var package = Application.LoadPackage(_filePath.FullName, null);
+            var package = Drive.PackageCache.GetPackage(_filePath.FullName);
 
             nodes.Add(new CollectionNodeFactory<PackageDescriptor>("Packages", new[]{ new PackageDescriptor( package, _filePath.FullName)}, a => new PackageNodeFactory(a)));
             
