@@ -9,18 +9,44 @@ using System.Threading.Tasks;
 
 namespace CodeOwls.BIPS.Utility
 {
-    class PackageCache
+    class PackageCache : Dictionary<string, PackageDescriptor>
+    {
+        BipsDrive _drive;
+
+        public PackageCache(BipsDrive drive)
+        {
+            _drive = drive;
+        }
+
+        public PackageDescriptor GetPackage(string path)
+        {
+            path = path.ToLowerInvariant();
+            if (!this.ContainsKey(path))
+            {
+                var package = _drive.Application.LoadPackage(path, null);
+                var descriptor = new PackageDescriptor(package, path);
+                Add(path, descriptor);
+            }
+            return this[path];
+        }
+        public string GetKey(FileInfo f)
+        {
+            return f.FullName;
+        }
+
+    }
+
+    class ServerPackageProxy
     {
         private readonly string _serverName;
-
+        
         class ProjectPath
         {
             public string Folder { get; set; }
             public string Project { get; set; }
         }
 
-
-        public PackageCache(string serverName)
+        public ServerPackageProxy(string serverName)
         {
             _serverName = serverName;            
             Packages= new List<PackageDescriptor>();

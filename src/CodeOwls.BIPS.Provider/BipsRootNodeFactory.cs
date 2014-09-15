@@ -13,6 +13,12 @@ namespace CodeOwls.BIPS
     public class BipsRootNodeFactory : NodeFactoryBase
     {
         private readonly BipsDrive _drive;
+
+        protected BipsDrive Drive
+        {
+            get { return _drive; }
+        } 
+
         private readonly Application _application;
 
         public BipsRootNodeFactory(BipsDrive drive)
@@ -28,7 +34,7 @@ namespace CodeOwls.BIPS
 
             GetCommonNodeFactories(nodes);
 
-            var packages = _drive.PackageCache.Packages;
+            var packages = _drive.PackageProxy.Packages;
             if( ! packages.Any() )
             {
                 var progress = new ProgressRecord(1, "Loading Packages", "Loading DTS Packages");
@@ -95,10 +101,10 @@ namespace CodeOwls.BIPS
                 {
                     progress.CurrentOperation = "Loading packages in project "+ item.Name +"...";
                     context.WriteProgress(progress);
-                    var paths = _drive.PackageCache.GetLocalPackageFilePathsForProject(item.Path);
+                    var paths = _drive.PackageProxy.GetLocalPackageFilePathsForProject(item.Path);
                     foreach (var path in paths)
                     {                        
-                        var package = Application.LoadPackage(path, null);
+                        var package = _drive.PackageCache.GetPackage(path);
                         packages.Add( new PackageDescriptor( package, item.Path ));
                     }
                 }                

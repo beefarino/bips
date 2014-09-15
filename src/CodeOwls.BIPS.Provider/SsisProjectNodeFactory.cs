@@ -19,7 +19,7 @@ namespace CodeOwls.BIPS
 
         public override IEnumerable<INodeFactory> GetNodeChildren(IContext context)
         {
-            var packageFiles = _drive.PackageCache.GetLocalPackageFilePathsForProject(_project.Path);
+            var packageFiles = _drive.PackageProxy.GetLocalPackageFilePathsForProject(_project.Path);
 
             return
                 packageFiles.ToList()

@@ -10,6 +10,7 @@ namespace CodeOwls.BIPS
         private readonly string _server;
         private readonly SsisDbHelper _helper;
         private readonly PackageCache _cache;
+        private readonly ServerPackageProxy _proxy;
         private static readonly Application _application;
 
         static BipsDrive()
@@ -21,14 +22,16 @@ namespace CodeOwls.BIPS
         {
             _server = driveInfo.Root.TrimEnd('\\','/');
             _helper = new SsisDbHelper(_server);
-            _cache = new PackageCache(_server);
+            _proxy = new ServerPackageProxy(_server);
+            _cache = new PackageCache( this );
 
-            _cache.Clear();
+            _proxy.Clear();
         }
 
         internal SsisDbHelper SsisDbHelper { get { return _helper; } }
+        internal ServerPackageProxy PackageProxy { get { return _proxy; } }
         internal PackageCache PackageCache { get { return _cache; } }
-        
+
         public Application Application
         {
             get { return _application; }
