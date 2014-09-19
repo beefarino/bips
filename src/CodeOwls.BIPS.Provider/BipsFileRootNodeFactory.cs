@@ -5,6 +5,7 @@ using System.Linq;
 using CodeOwls.BIPS.Utility;
 using CodeOwls.PowerShell.Provider.PathNodeProcessors;
 using CodeOwls.PowerShell.Provider.PathNodes;
+using System.Management.Automation;
 
 namespace CodeOwls.BIPS
 {
@@ -22,11 +23,12 @@ namespace CodeOwls.BIPS
             var nodes = new List<INodeFactory>();
 
             GetCommonNodeFactories( nodes );
-
+            ProgressRecord progress = new ProgressRecord(9, "Package Cache", "Loading package:");
+            
             if (File.Exists(_filePath))
             {
                 var fileInfo = new FileInfo(_filePath);
-                var package = Drive.PackageCache.GetPackage(fileInfo.FullName);
+                var package = Drive.PackageCache.GetPackage(fileInfo.FullName, context, progress);
 
                 nodes.Add(new CollectionNodeFactory<PackageDescriptor>("Packages",
                     new[] {new PackageDescriptor(package, fileInfo.FullName)}, a => new PackageNodeFactory(a)));
@@ -35,11 +37,21 @@ namespace CodeOwls.BIPS
             {
                 var info = new DirectoryInfo(_filePath);
                 var packagePaths = info.GetFiles("*.dtsx", SearchOption.TopDirectoryOnly);
-                var packages = packagePaths.ToList().ConvertAll( e=> Drive.PackageCache.GetPackage(e.FullName) );
+                int count = packagePaths.Count();
+                int i = 0;
+                var packages = packagePaths.ToList().ConvertAll(e =>
+                {
+                    progress.PercentComplete = 100 * i++ / count;
+                    progress.RecordType = ProgressRecordType.Processing;
+                    return Drive.PackageCache.GetPackage(e.FullName, context, progress);
+                });
 
                 nodes.Add(new CollectionNodeFactory<PackageDescriptor>("Packages", packages, a => new PackageNodeFactory(a)));
             }
 
+            progress.RecordType = ProgressRecordType.Completed;
+            progress.PercentComplete = 100;
+            context.WriteProgress(progress);
             return nodes;
         }
 

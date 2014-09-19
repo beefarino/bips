@@ -104,7 +104,7 @@ namespace CodeOwls.BIPS
                     var paths = _drive.PackageProxy.GetLocalPackageFilePathsForProject(item.Path);
                     foreach (var path in paths)
                     {                        
-                        var package = _drive.PackageCache.GetPackage(path);
+                        var package = _drive.PackageCache.GetPackage(path,context);
                         packages.Add( new PackageDescriptor( package, item.Path ));
                     }
                 }                

@@ -11,4 +11,5 @@ src/_ReSharper.Splunk.Integration.SCOM
 src/Splunk.Integration.SCOM/_ReSharper.Splunk.Integration.SCOM
 obj
 bin
+build
 Resources/*
