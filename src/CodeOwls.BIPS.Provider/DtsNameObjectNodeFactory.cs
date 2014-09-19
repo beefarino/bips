@@ -45,4 +45,5 @@ namespace CodeOwls.BIPS
             get { return _nameGetter(); }
         }
     }
+
 }

@@ -9,7 +9,7 @@ function convertto-packageXml
 
     process {
         [string] $xmlString;
-        $package.SaveToXml( [out]$xmlString, $null );
+        $package.SaveToXml( [ref]$xmlString, $null );
 
         [xml]$xmlString;
     }
@@ -87,6 +87,34 @@ function convertfrom-packageXml
     $package = convertfrom-packageXml $xml
 
     Creates a new SSIS package object from the XML document
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 09/19/2014 14:08:57 
+#> 
+}
+
+function deploy-package
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
+        [CodeOwls.BIPS.Utility.PackageDescriptor]
+        # the package to save
+        $package
+    );
+
+    process {
+        
+    }
+
+<# 
+   .SYNOPSIS 
+    not implemented
+   .DESCRIPTION
+    not implemented
+   .EXAMPLE 
+    get-item myServer:/packages/myPackage | deploy-package
+
+    Converts the package object found at the BIPS drive location to it's XML equivalent
    .NOTES
     AUTHOR: beefarino
     LASTEDIT: 09/19/2014 14:08:57 

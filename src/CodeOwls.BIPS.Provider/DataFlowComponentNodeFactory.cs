@@ -7,13 +7,15 @@ using Microsoft.SqlServer.Dts.Runtime.Wrapper;
 
 namespace CodeOwls.BIPS
 {
-    public class DataFlowComponentNodeFactory : NodeFactoryBase
+    public class DataFlowComponentNodeFactory : NodeFactoryBase, IRemoveItem
     {
         private readonly IDTSComponentMetaData100 _input;
+        private readonly IDTSComponentMetaDataCollection100 _metadata;
 
-        public DataFlowComponentNodeFactory(IDTSComponentMetaData100 input)
+        public DataFlowComponentNodeFactory(IDTSComponentMetaData100 input, IDTSComponentMetaDataCollection100 metadata)
         {
             _input = input;
+            _metadata = metadata;
         }
 
         public override IEnumerable<INodeFactory> GetNodeChildren(IContext context)
@@ -36,6 +38,12 @@ namespace CodeOwls.BIPS
         public override string Name
         {
             get { return _input.Name; }
+        }
+
+        public object RemoveItemParameters { get; private set; }
+        public void RemoveItem(IContext context, string path, bool recurse)
+        {
+            _metadata.RemoveObjectByID( _input.ID );
         }
     }
 }

@@ -39,6 +39,12 @@ namespace CodeOwls.BIPS
 
             return new BipsDrive( drive );
         }
+
+        protected override ProviderInfo Start(ProviderInfo providerInfo)
+        {
+            this.SessionState.PSVariable.Set( "SSISApplication", new Application() );
+            return base.Start(providerInfo);
+        }
     }
 
     /*public class BipsPackageDrive : Drive
