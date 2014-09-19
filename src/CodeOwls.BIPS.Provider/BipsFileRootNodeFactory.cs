@@ -31,7 +31,7 @@ namespace CodeOwls.BIPS
                 var package = Drive.PackageCache.GetPackage(fileInfo.FullName, context, progress);
 
                 nodes.Add(new CollectionNodeFactory<PackageDescriptor>("Packages",
-                    new[] {new PackageDescriptor(package, fileInfo.FullName)}, a => new PackageNodeFactory(a)));
+                    new[] {package}, a => new PackageNodeFactory(a)));
             }
             else if (Directory.Exists(_filePath))
             {
@@ -44,7 +44,7 @@ namespace CodeOwls.BIPS
                     progress.PercentComplete = 100 * i++ / count;
                     progress.RecordType = ProgressRecordType.Processing;
                     return Drive.PackageCache.GetPackage(e.FullName, context, progress);
-                });
+                }).Where( a=>null != a);
 
                 nodes.Add(new CollectionNodeFactory<PackageDescriptor>("Packages", packages, a => new PackageNodeFactory(a)));
             }

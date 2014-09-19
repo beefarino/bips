@@ -39,12 +39,23 @@ namespace CodeOwls.BIPS.Utility
                     progress.CurrentOperation = path;
                     context.WriteProgress(progress);
                 }
-                
+
                 try
                 {
                     var package = _drive.Application.LoadPackage(path, events, true);
                     var descriptor = new PackageDescriptor(package, path);
                     _cache.Add(path, descriptor);
+                }
+                catch(Exception e)
+                {
+                    /*if (!context.Force)
+                    {
+                        throw;
+                    }*/
+
+                    _cache.Add( path, null );
+                    var errorRecord = new ErrorRecord( e, "PackageCache.GetPackage", ErrorCategory.ReadError, path);
+                    context.WriteError( errorRecord );
                 }
                 finally
                 {
