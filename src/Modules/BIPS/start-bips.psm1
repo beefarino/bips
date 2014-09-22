@@ -131,6 +131,35 @@ function deploy-package
 #> 
 }
 
+function save-package
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
+        [CodeOwls.BIPS.Utility.PackageDescriptor]
+        # the package to save
+        $package
+    );
+
+    process {
+        $pkg = $package.Package;
+        $path = $package.Location;
+    }
+
+<# 
+   .SYNOPSIS 
+    not implemented
+   .DESCRIPTION
+    not implemented
+   .EXAMPLE 
+    get-item myServer:/packages/myPackage | deploy-package
+
+    
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 09/19/2014 14:08:57 
+#> 
+}
+
 function clear-packageLayout
 {
     param(

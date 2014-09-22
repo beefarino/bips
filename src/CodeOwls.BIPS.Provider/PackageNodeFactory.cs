@@ -32,10 +32,10 @@ namespace CodeOwls.BIPS
             children.Add(new CollectionNodeFactory<DtsError>("Errors",errors, e=>new DtsErrorNodeFactory(e)));
 
             var executables = _package.Executables.Cast<Executable>().ToList();
-            children.Add(new CollectionNodeFactory<Executable>("Executables", executables, c => new ExecutableNodeFactory(c)));
+            children.Add(new CollectionNodeFactory<Executable>("Executables", executables, c => new ExecutableNodeFactory(c, _package.Executables)));
 
             var exprop = _package.ExtendedProperties.Cast<ExtendedProperty>().ToList();
-            children.Add(new CollectionNodeFactory<ExtendedProperty>("ExtendedProperties", exprop, c => new ObjectNodeFactory<ExtendedProperty>(c, ()=>c.Name)));
+            children.Add(new CollectionNodeFactory<ExtendedProperty>("ExtendedProperties", exprop, c => new ExtendedPropertyNodeFactory(c, _package.ExtendedProperties)));
 
             var logs = _package.LogProviders.Cast<LogProvider>();
             children.Add( new CollectionNodeFactory<LogProvider>("LogProviders",logs, l=>new ObjectNodeFactory<LogProvider>(l,()=>l.Name)));

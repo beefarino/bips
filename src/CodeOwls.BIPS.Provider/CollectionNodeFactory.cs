@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CodeOwls.PowerShell.Provider.PathNodeProcessors;
 using CodeOwls.PowerShell.Provider.PathNodes;
+using Microsoft.SqlServer.Dts.Runtime;
 
 namespace CodeOwls.BIPS
 {
@@ -47,4 +49,5 @@ namespace CodeOwls.BIPS
 
         public string Name { get { return _factory.Name; }}
     }
+
 }

@@ -21,11 +21,6 @@ namespace CodeOwls.BIPS
         private readonly ForLoop _forloop;
         private readonly MainPipe _mainPipe;
 
-        public ExecutableNodeFactory(Executable executable)
-            :this(executable,null)
-        {
-            
-        }
         public ExecutableNodeFactory(Executable executable,Executables collection)
         {
             _collection = collection;

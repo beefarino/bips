@@ -53,5 +53,5 @@ namespace CodeOwls.BIPS
         {
             _collection.Remove( _property.ID );
         }
-    }
+    }    
 }
