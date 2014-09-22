@@ -66,7 +66,7 @@ namespace CodeOwls.BIPS
             if (null != _mainPipe)
             {
                 var metadata = _mainPipe.ComponentMetaDataCollection.Cast<IDTSComponentMetaData100>();
-                nodes.AddRange(metadata.ToList().ConvertAll(c => new DataFlowComponentNodeFactory(c)));
+                nodes.AddRange(metadata.ToList().ConvertAll(c => new DataFlowComponentNodeFactory(c, _mainPipe.ComponentMetaDataCollection)));
             }
             else if (null != _host)
             {

@@ -23,7 +23,7 @@ namespace CodeOwls.BIPS
             return
                 _drive.SsisDbHelper.GetProjectsForFolder(_folder)
                       .ToList()
-                      .ConvertAll(p => new SsisProjectNodeFactory(_drive, p));
+                      .ConvertAll(p => new SsisProjectNodeFactory(_drive, _folder, p));
         }
         public override IPathNode GetNodeValue()
         {

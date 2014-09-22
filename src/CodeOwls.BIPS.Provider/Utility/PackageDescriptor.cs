@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using Microsoft.SqlServer.Dts.Runtime;
@@ -11,13 +12,21 @@ namespace CodeOwls.BIPS.Utility
     {
         private readonly Package _package;
 
-        public PackageDescriptor(Package package, string location )
+        public PackageDescriptor(Package package, string filePath )
         {
-            Location = location;
+            Location = filePath;
             _package = package;
         }
 
+        public PackageDescriptor(Package package, SsisDbProjectDescriptor dbPackageDescriptor, string path)
+        {
+            _package = package;
+            Location = path;
+            ProjectDescriptor = dbPackageDescriptor;
+        }
+
         public string Location { get; private set; }
+        public SsisDbProjectDescriptor ProjectDescriptor { get; set; }
 
         public DTSExecResult Validate(Connections connections, Variables variables, IDTSEvents events, IDTSLogging log)
         {
@@ -604,7 +613,7 @@ namespace CodeOwls.BIPS.Utility
         {
             get { return _package; }
         }
-
+        
         public static implicit operator Package(PackageDescriptor p)
         {
             return p.Package;

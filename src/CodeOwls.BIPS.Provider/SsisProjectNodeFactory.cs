@@ -9,11 +9,13 @@ namespace CodeOwls.BIPS
     public class SsisProjectNodeFactory : NodeFactoryBase
     {        
         private readonly BipsDrive _drive;
+        private readonly SsisDbFolderDescriptor _folder;
         private readonly SsisDbProjectDescriptor _project;
         
-        public SsisProjectNodeFactory(BipsDrive drive, SsisDbProjectDescriptor project)
+        public SsisProjectNodeFactory(BipsDrive drive, SsisDbFolderDescriptor folder, SsisDbProjectDescriptor project)
         {
             _drive = drive;
+            _folder = folder;
             _project = project;
         }
 
@@ -21,11 +23,12 @@ namespace CodeOwls.BIPS
         {
             var packageFiles = _drive.PackageProxy.GetLocalPackageFilePathsForProject(_project.Path);
 
-            return
-                packageFiles.ToList()
-                            .ConvertAll(f => _drive.Application.LoadPackage(f, null))
-                            .ConvertAll(p => new PackageNodeFactory( new PackageDescriptor( p, _project.Name )));
+            var nodeFactories = from string packageFile in packageFiles.ToList()
+                let f = _drive.Application.LoadPackage(packageFile, null )
+                let pd = new PackageDescriptor( f, _project, packageFile )
+                select new PackageNodeFactory( pd );
 
+            return nodeFactories.ToList();
         }
 
         public override IPathNode GetNodeValue()

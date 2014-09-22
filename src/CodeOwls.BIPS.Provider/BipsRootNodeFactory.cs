@@ -105,7 +105,7 @@ namespace CodeOwls.BIPS
                     foreach (var path in paths)
                     {                        
                         var package = _drive.PackageCache.GetPackage(path,context);
-                        packages.Add( new PackageDescriptor( package.Package, item.Path ));
+                        packages.Add( new PackageDescriptor( package.Package, item, path ));
                     }
                 }                
             }

@@ -108,6 +108,7 @@ order by p.[Name]
 
                             var descriptor = new SsisDbProjectDescriptor
                                                  {
+                                                     Server = _serverName,
                                                      ProjectId = projectId,
                                                      FolderId = folderId,
                                                      Name = name,
@@ -153,6 +154,7 @@ order by p.[Name]
                             {
                                 var descriptor = new SsisDbFolderDescriptor
                                                      {
+                                                         Server=_serverName,
                                                          FolderId = reader.GetInt64( oid ),
                                                          Name=reader.GetString(oname),
                                                          Description = reader.IsDBNull(odesc) ? null : reader.GetString(odesc),
@@ -212,6 +214,7 @@ order by p.[Name]
         public string Description { get; set; }
         public Guid PackageGuid { get; set; }
         public Guid VersionGuid { get; set; }
+        public string Server { get; set; }
     }
 
     public class SsisDbFolderDescriptor
@@ -221,6 +224,7 @@ order by p.[Name]
         public string Description { get; set; }
         public string CreatedBy { get; set; }
         public DateTimeOffset CreatedTime { get; set; }
+        public string Server { get; set; }
     }
 
     public class SsisDbProjectDescriptor
@@ -239,6 +243,7 @@ order by p.[Name]
         public DateTimeOffset CreatedTime { get; set; }
         public char ValidationStatus { get; set; }
         public DateTimeOffset LastValidationTime { get; set; }
+        public string Server { get; set; }
     }
 }
 

@@ -83,6 +83,7 @@
     <Compile Include="ExecutableNodeFactory.cs" />
     <Compile Include="GetDeployedPackageCmdet.cs" />
     <Compile Include="LogProviderInfoNodeFactory.cs" />
+    <Compile Include="ObjectNodeFactory.cs" />
     <Compile Include="PackageConfigurationNodeFactory.cs" />
     <Compile Include="PackageInfoNodeFactory.cs" />
     <Compile Include="PackageNodeFactory.cs" />

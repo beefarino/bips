@@ -4,12 +4,22 @@ function convertto-packageXml
         [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
         [Microsoft.SqlServer.Dts.Runtime.Package]
         # the package to convert to XML
-        $package
+        $package,
+
+        [Parameter()]
+        [switch]
+        # when specified, the XML is returned as a string
+        $asString
     );
 
     process {
         [string] $xmlString;
         $package.SaveToXml( [ref]$xmlString, $null );
+
+        if( $asString )
+        {
+            return $xmlString;
+        }
 
         [xml]$xmlString;
     }
@@ -103,7 +113,7 @@ function deploy-package
     );
 
     process {
-        
+        throw "not implemented";
     }
 
 <# 
@@ -114,9 +124,51 @@ function deploy-package
    .EXAMPLE 
     get-item myServer:/packages/myPackage | deploy-package
 
-    Converts the package object found at the BIPS drive location to it's XML equivalent
+    
    .NOTES
     AUTHOR: beefarino
     LASTEDIT: 09/19/2014 14:08:57 
+#> 
+}
+
+function clear-packageLayout
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
+        [Microsoft.SqlServer.Dts.Runtime.Package]
+        # the package to auto-layout
+        $package,
+
+        [Parameter()]
+        [switch]
+        # when specified, drops the package back on the pipeline
+        $passThru
+    );
+
+    process {
+        $package.ExtendedProperties | where {
+            $_.namespace -match 'dts-designer'
+        } | foreach{
+            $package.ExtendedProperties.Remove( $_.ID )
+        }
+
+        if( $passThru )
+        {
+            $package;
+        }
+    }
+
+<# 
+   .SYNOPSIS 
+    removes all DTS layout formatting from the package
+   .DESCRIPTION
+    removes all DTS layout formatting from the package
+   .EXAMPLE 
+    get-item myServer:/packages/myPackage | clear-packageLayout
+
+    Removes all DTS layout information from the package at the specified BIPS location
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 09/19/2014 17:28:44 
 #> 
 }
