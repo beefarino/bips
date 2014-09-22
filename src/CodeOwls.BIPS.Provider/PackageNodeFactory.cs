@@ -45,7 +45,10 @@ namespace CodeOwls.BIPS
 
             var properties = _package.Properties.Cast<DtsProperty>();
             children.Add(new CollectionNodeFactory<DtsProperty>("Properties", properties, p => new ObjectNodeFactory<DtsProperty>(p, () => p.Name)));
-            
+
+            var variables = _package.Variables.Cast<Variable>();            
+            children.Add(new CollectionNodeFactory<Variable>("Variables", variables, p => new ObjectNodeFactory<Variable>(p, () => p.Name)));
+
             var warnings = _package.Warnings.Cast<DtsWarning>();
             children.Add(new CollectionNodeFactory<DtsWarning>("Warnings", warnings, p => new ObjectNodeFactory<DtsWarning>(p, () => p.WarningCode.ToString())));
 

@@ -143,6 +143,7 @@ function save-package
     process {
         $pkg = $package.Package;
         $path = $package.Location;
+        $ssisApplication.SaveToXml( $path, $pkg, $null );
     }
 
 <# 
