@@ -178,7 +178,7 @@ function clear-packageLayout
 #> 
 }
 
-function load-packageXml
+function get-packageXml
 {
     param(
         [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -207,7 +207,7 @@ function load-packageXml
    .DESCRIPTION
     loads the specified package XML file
    .EXAMPLE 
-    ls *.dtsx | load-pacakgeXml
+    ls *.dtsx | get-pacakgeXml
     
    .NOTES
     AUTHOR: beefarino
@@ -236,7 +236,7 @@ function save-packageXml
     );
     
     process {
-        $originalFilePathNode = $xml | get-packageXmlNode "//dts:Property[ @dts:Name='BIPSOriginalFilePath' ]";
+        $originalFilePathNode = $xml | select-packageXmlNode "//dts:Property[ @dts:Name='BIPSOriginalFilePath' ]";
         $originalFilePath = $originalFilePathNode.'#text';
         $originalFilePathNode.ParentNode.RemoveChild($originalFilePathNode) | out-null;
 
@@ -275,7 +275,7 @@ function save-packageXml
 function disable-config
 {
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, ParameterSetName='xml')]
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [CodeOwls.BIPS.Utility.XmlFile()]
         [xml]
         # the package to process
@@ -283,7 +283,7 @@ function disable-config
     );
     
     process {
-        $xml | get-packageXmlNode "//dts:Property[@dts:Name='EnableConfig']" | foreach {
+        $xml | select-packageXmlNode "//dts:Property[@dts:Name='EnableConfig']" | foreach {
             $_.'#text' = '0';
         }
 
@@ -307,7 +307,7 @@ function disable-config
 function enable-config
 {
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, ParameterSetName='xml')]
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [CodeOwls.BIPS.Utility.XmlFile()]
         [xml]
         # the package to process
@@ -315,7 +315,7 @@ function enable-config
     );
     
     process {
-        $xml | get-packageXmlNode "//dts:Property[@dts:Name='EnableConfig']" | foreach {
+        $xml | select-packageXmlNode "//dts:Property[@dts:Name='EnableConfig']" | foreach {
             $_.'#text' = '-1';
         }
 
@@ -335,10 +335,75 @@ function enable-config
     LASTEDIT: 09/22/2014 23:34:21 
 #> 
 }
+
+function enable-package
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [CodeOwls.BIPS.Utility.XmlFile()]
+        [xml]
+        # the package to enable
+        $xml
+    );
+    
+    process {
+        $xml | select-packageXmlNode "//dts:Property[@dts:Name='Disabled']" | foreach {
+            $_.'#text' = '0';
+        }
+
+        $xml;
+    }
+
+<# 
+   .SYNOPSIS 
+    enables the package 
+   .DESCRIPTION
+    enables the package 
+   .EXAMPLE 
+    ls *.dtsx | enable-package
+    
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 09/22/2014 23:34:21 
+#> 
+}
+
+function disable-package
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [CodeOwls.BIPS.Utility.XmlFile()]
+        [xml]
+        # the package to disable
+        $xml
+    );
+    
+    process {
+        $xml | select-packageXmlNode "//dts:Property[@dts:Name='Disabled']" | foreach {
+            $_.'#text' = '-1';
+        }
+
+        $xml;
+    }
+
+<# 
+   .SYNOPSIS 
+    disables the package 
+   .DESCRIPTION
+    disables the package 
+   .EXAMPLE 
+    ls *.dtsx | disable-package
+    
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 09/22/2014 23:34:21 
+#> 
+}
+
 function disable-validation
 {
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, ParameterSetName='xml')]
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [CodeOwls.BIPS.Utility.XmlFile()]
         [xml]
         # the package to auto-layout
@@ -346,7 +411,7 @@ function disable-validation
     );
     
     process {
-        $xml | get-packageXmlNode "//dts:Property[@dts:Name='DelayValidation']" | foreach {
+        $xml | select-packageXmlNode "//dts:Property[@dts:Name='DelayValidation']" | foreach {
             $_.'#text' = '-1';
         }
 
@@ -378,7 +443,7 @@ function enable-validation
     );
     
     process {
-        $xml |  get-packageXmlNode "//dts:Property[@dts:Name='DelayValidation']" | foreach {
+        $xml |  select-packageXmlNode "//dts:Property[@dts:Name='DelayValidation']" | foreach {
             $_.'#text' = '0';
         }
 
@@ -409,11 +474,11 @@ function find-componentMissingInputColumn
     );
 
     process {
-        $xml | get-packageXmlNode "//component[ ./inputs/input[ not( ./inputColumns ) ] ]" | foreach {
+        $xml | select-packageXmlNode "//component[ ./inputs/input[ not( ./inputColumns ) ] ]" | foreach {
             new-object psobject -prop @{
                 'Component' = $_.name
                 'ID' = $_.id
-                'Path' = $path
+                'Path' = ($xml | select-packageXmlNode "//dts:Property[ @dts:Name='BIPSOriginalFilePath' ]" | select -exp '#text' )
             }            
         }
     }
@@ -435,7 +500,7 @@ function find-componentMissingInputColumn
 #> 
 }
 
-function get-packageXmlNode
+function select-packageXmlNode
 {
     param(
         [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -463,7 +528,7 @@ function get-packageXmlNode
         dts => www.microsoft.com/SqlServer/Dts
 
    .EXAMPLE 
-    ls *.dtsx | get-packageXmlNode "//dts:Property[ @dts:Name = 'PackageVariableValue' ]"
+    ls *.dtsx | select-packageXmlNode "//dts:Property[ @dts:Name = 'PackageVariableValue' ]"
     
    .NOTES
     AUTHOR: beefarino

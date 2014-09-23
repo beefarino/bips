@@ -16,6 +16,11 @@ namespace CodeOwls.BIPS.Utility
     {
         public override object Transform(EngineIntrinsics engineIntrinsics, object inputData)
         {
+            if (null == inputData)
+            {
+                return null;
+            }
+
             var pso = PSObject.AsPSObject(inputData);
             FileInfo file = pso.BaseObject as FileInfo;
             if (null == file)
@@ -32,7 +37,7 @@ namespace CodeOwls.BIPS.Utility
                 return inputData;
             }
 
-            var results = engineIntrinsics.InvokeCommand.InvokeScript("load-packageXml", false, PipelineResultTypes.None, new ArrayList{inputData}, null);
+            var results = engineIntrinsics.InvokeCommand.InvokeScript("get-packageXml", false, PipelineResultTypes.None, new ArrayList{inputData}, null);
             return results.FirstOrDefault();
         }
     }
