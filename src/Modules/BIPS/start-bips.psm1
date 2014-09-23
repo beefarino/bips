@@ -256,6 +256,7 @@ function save-package
             $xml.Save( $path );
             $xml;
         }        
+    }
 
 <# 
    .SYNOPSIS 
