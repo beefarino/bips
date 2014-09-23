@@ -97,6 +97,7 @@
     <Compile Include="Utility\PackageDescriptor.cs" />
     <Compile Include="Utility\ServerPackageProxy.cs" />
     <Compile Include="Utility\SsisDbHelper.cs" />
+    <Compile Include="Utility\XmlFileArgumentTransformAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeOwls.PowerShell\CodeOwls.PowerShell.Paths\CodeOwls.PowerShell.Paths.csproj">

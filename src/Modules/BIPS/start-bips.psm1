@@ -1,3 +1,5 @@
+$dtsns = 'www.microsoft.com/SqlServer/Dts';
+
 function convertto-packageXml
 {
     param(
@@ -76,6 +78,7 @@ function convertfrom-packageXml
 {
     param(
         [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
+        [CodeOwls.Bips.Utility.XmlFile()]
         [xml]
         # the package xml to convert to an object
         $xml
@@ -103,34 +106,6 @@ function convertfrom-packageXml
 #> 
 }
 
-function deploy-package
-{
-    param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
-        [CodeOwls.BIPS.Utility.PackageDescriptor]
-        # the package to save
-        $package
-    );
-
-    process {
-        throw "not implemented";
-    }
-
-<# 
-   .SYNOPSIS 
-    not implemented
-   .DESCRIPTION
-    not implemented
-   .EXAMPLE 
-    get-item myServer:/packages/myPackage | deploy-package
-
-    
-   .NOTES
-    AUTHOR: beefarino
-    LASTEDIT: 09/19/2014 14:08:57 
-#> 
-}
-
 function save-package
 {
     param(
@@ -148,11 +123,11 @@ function save-package
 
 <# 
    .SYNOPSIS 
-    not implemented
+    Saves the specified package to the local file system.
    .DESCRIPTION
-    not implemented
+    Saves the specified package to the local file system.
    .EXAMPLE 
-    get-item myServer:/packages/myPackage | deploy-package
+    get-item myServer:/packages/myPackage | save-package
 
     
    .NOTES
@@ -200,5 +175,298 @@ function clear-packageLayout
    .NOTES
     AUTHOR: beefarino
     LASTEDIT: 09/19/2014 17:28:44 
+#> 
+}
+
+function load-packageXml
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [alias("pspath")]
+        # the package to load
+        $path
+    );
+    
+    process {
+        $x = [xml]( get-content $path );
+        
+        $e = $x.CreateElement("DTS","Property", $dtsns );
+        $v = $x.CreateTextNode($path);
+        $a = $x.CreateAttribute("DTS","Name", $dtsns );
+        $a.Value = "BIPSOriginalFilePath";
+        $e.AppendChild($v) | Out-Null;
+        $e.Attributes.Append($a)| Out-Null;
+        $x.DocumentElement.PrependChild( $e )| Out-Null;
+
+        $x;
+    }
+
+<# 
+   .SYNOPSIS 
+    loads the specified package XML file
+   .DESCRIPTION
+    loads the specified package XML file
+   .EXAMPLE 
+    ls *.dtsx | load-pacakgeXml
+    
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 09/19/2014 17:28:44 
+#> 
+}
+
+
+function save-packageXml
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [xml]
+        # the package to load
+        $xml,
+
+        [Parameter()]
+        [alias("destination")]
+        [string]
+        # the file or folder location to output the package XML; if unspecified, defaults to the current filesystem location
+        $outputPath = (Get-Location filesystem),
+
+        [Parameter()]
+        [switch]
+        $passthru
+    );
+    
+    process {
+        $originalFilePathNode = $xml | get-packageXmlNode "//dts:Property[ @dts:Name='BIPSOriginalFilePath' ]";
+        $originalFilePath = $originalFilePathNode.'#text';
+        $originalFilePathNode.ParentNode.RemoveChild($originalFilePathNode) | out-null;
+
+        write-debug "Original BIPS file path: $originalFilePath"
+
+        $path =  $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($outputPath);
+        if( -not [io.file]::exists( $path ) )
+        {
+            $filename = (split-path $originalFilePath -Leaf)
+            $path = $path | join-path -child $filename
+        }
+
+        write-debug "Saving XML document to file path: $path"
+        $xml.Save( $path );
+
+        if($passthru)
+        {
+            $xml;
+        }
+    }
+
+<# 
+   .SYNOPSIS 
+    saves the specified package XML file
+   .DESCRIPTION
+    saves the specified package XML file
+   .EXAMPLE 
+    ls *.dtsx | disable-validation | save-pacakgeXml
+    
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 09/19/2014 17:28:44 
+#> 
+}
+
+function disable-config
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, ParameterSetName='xml')]
+        [CodeOwls.BIPS.Utility.XmlFile()]
+        [xml]
+        # the package to process
+        $xml
+    );
+    
+    process {
+        $xml | get-packageXmlNode "//dts:Property[@dts:Name='EnableConfig']" | foreach {
+            $_.'#text' = '0';
+        }
+
+        $xml;
+    }
+
+<# 
+   .SYNOPSIS 
+    disables the configuration system for the package XML file
+   .DESCRIPTION
+    disables the configuration system for the package XML file
+   .EXAMPLE 
+    ls *.dtsx | disable-config
+    
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 09/22/2014 23:34:21 
+#> 
+}
+
+function enable-config
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, ParameterSetName='xml')]
+        [CodeOwls.BIPS.Utility.XmlFile()]
+        [xml]
+        # the package to process
+        $xml
+    );
+    
+    process {
+        $xml | get-packageXmlNode "//dts:Property[@dts:Name='EnableConfig']" | foreach {
+            $_.'#text' = '-1';
+        }
+
+        $xml;
+    }
+
+<# 
+   .SYNOPSIS 
+    enables the configuration system for the package XML file
+   .DESCRIPTION
+    enables the configuration system for the package XML file
+   .EXAMPLE 
+    ls *.dtsx | enable-config
+    
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 09/22/2014 23:34:21 
+#> 
+}
+function disable-validation
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, ParameterSetName='xml')]
+        [CodeOwls.BIPS.Utility.XmlFile()]
+        [xml]
+        # the package to auto-layout
+        $xml
+    );
+    
+    process {
+        $xml | get-packageXmlNode "//dts:Property[@dts:Name='DelayValidation']" | foreach {
+            $_.'#text' = '-1';
+        }
+
+        $xml;
+    }
+
+<# 
+   .SYNOPSIS 
+    disables all validations in the package XML file
+   .DESCRIPTION
+    disables all validations in the package XML file
+   .EXAMPLE 
+    ls *.dtsx | disable-validation
+    
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 09/19/2014 17:28:44 
+#> 
+}
+
+function enable-validation
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [CodeOwls.Bips.Utility.XmlFile()]
+        [xml]
+        # the package to auto-layout
+        $xml
+    );
+    
+    process {
+        $xml |  get-packageXmlNode "//dts:Property[@dts:Name='DelayValidation']" | foreach {
+            $_.'#text' = '0';
+        }
+
+        $xml;
+    }
+
+<# 
+   .SYNOPSIS 
+    enables all validations in the package XML file
+   .DESCRIPTION
+    enables all validations in the package XML file
+   .EXAMPLE 
+    ls *.dtsx | disable-validation
+    
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 09/19/2014 17:28:44 
+#> 
+}
+
+function find-componentMissingInputColumn
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [CodeOwls.Bips.Utility.XmlFile()]
+        # the path of the package to process
+        $xml
+    );
+
+    process {
+        $xml | get-packageXmlNode "//component[ ./inputs/input[ not( ./inputColumns ) ] ]" | foreach {
+            new-object psobject -prop @{
+                'Component' = $_.name
+                'ID' = $_.id
+                'Path' = $path
+            }            
+        }
+    }
+
+<# 
+   .SYNOPSIS 
+    Isolates components in the package that are missing input columns
+   .DESCRIPTION
+    Isolates components in the package that are missing input columns.
+
+    These components are defined as those having child <inputs><input /></inputs>
+    elements without a contained <inputColumns> element.
+   .EXAMPLE 
+    ls *.dtsx | find-componentMissingInputColumn
+    
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 09/22/2014 14:34:22 
+#> 
+}
+
+function get-packageXmlNode
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [xml]
+        # the package XML document
+        $xml,
+ 
+        [Parameter(Mandatory=$true, Position=1)]
+        # the xpath to locate 
+        $xpath
+    )
+
+    $nsm = new-object System.Xml.XmlNamespaceManager $xml.NameTable;
+    $nsm.AddNamespace( 'dts',$dtsns );
+        
+    $xml.SelectNodes( $xpath, $nsm );
+
+<# 
+   .SYNOPSIS 
+    Helper function for running xpath queries on package XML
+   .DESCRIPTION
+    Helper function for running xpath queries on package XML.
+
+    Automatically associates the following prefixes and namespaces:
+        dts => www.microsoft.com/SqlServer/Dts
+
+   .EXAMPLE 
+    ls *.dtsx | get-packageXmlNode "//dts:Property[ @dts:Name = 'PackageVariableValue' ]"
+    
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 09/22/2014 14:34:22 
 #> 
 }

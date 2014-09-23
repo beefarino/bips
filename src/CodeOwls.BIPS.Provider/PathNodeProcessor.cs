@@ -50,11 +50,11 @@ namespace CodeOwls.BIPS
             return base.ResolvePath(context, path);
         }
 
-        private static PSDriveInfo GetDriveFromPath(IContext context, string path)
+        private static BipsDrive GetDriveFromPath(IContext context, string path)
         {
             if (null != context.Drive && !String.IsNullOrEmpty(context.Drive.Root))
             {
-                return context.Drive;
+                return (BipsDrive) context.Drive;
             }
             return (from drive in context.SessionState.Provider.GetOne("BIPS").Drives
                 let root = drive.Root
@@ -62,7 +62,7 @@ namespace CodeOwls.BIPS
                 let rex = new Regex("^.*(" + Regex.Escape(root) + ")(.*)$", RegexOptions.IgnoreCase)
                 where rex.IsMatch(path)
                 orderby length descending
-                select drive).FirstOrDefault();
+                select (BipsDrive)drive).FirstOrDefault();
         }
 
         protected override INodeFactory Root
