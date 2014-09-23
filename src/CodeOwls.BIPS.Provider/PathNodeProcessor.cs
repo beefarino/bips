@@ -40,11 +40,11 @@ namespace CodeOwls.BIPS
 
             if (File.Exists(fileOrServerPath) || Directory.Exists(fileOrServerPath))
             {
-                _root = new BipsFileRootNodeFactory(_drive, fileOrServerPath);
+                _root = new BipsFileRootNodeFactory(driveInfo, fileOrServerPath);
             }
             else
             {
-                _root = new BipsRootNodeFactory(_drive);
+                _root = new BipsRootNodeFactory(driveInfo);
             }
 
             return base.ResolvePath(context, path);

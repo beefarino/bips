@@ -15,7 +15,7 @@ function convertto-packageXml
     );
 
     process {
-        [string] $xmlString;
+        [string] $xmlString = '';
         $package.SaveToXml( [ref]$xmlString, $null );
 
         if( $asString )
@@ -116,7 +116,7 @@ function save-package
     );
 
     process {
-        $pkg = $package.Package;
+        $pkg = $package;
         $path = $package.Location;
         $ssisApplication.SaveToXml( $path, $pkg, $null );
     }
@@ -136,31 +136,45 @@ function save-package
 #> 
 }
 
-function clear-packageLayout
+function reset-deignTimeLayout
 {
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
-        [Microsoft.SqlServer.Dts.Runtime.Package]
-        # the package to auto-layout
-        $package,
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ParameterSetName='xml')]
+        [CodeOwls.Bips.Utility.XmlFile()]
+        [xml]
+        # the package XML to auto-layout
+        $xml,
 
-        [Parameter()]
+        [Parameter(ParameterSetName='package')]
         [switch]
         # when specified, drops the package back on the pipeline
         $passThru
     );
 
     process {
-        $package.ExtendedProperties | where {
-            $_.namespace -match 'dts-designer'
-        } | foreach{
-            $package.ExtendedProperties.Remove( $_.ID )
+
+        $version = $xml | select-packageXmlNode "/dts:Executable/@dts:ExecutableType";
+        switch -Regex ( $version.Value )
+        {
+            '2$' { 
+                $xml | select-packageXmlNode "//dts:PackageVariable[ ./dts:Property[ @dts:Namespace='dts-designer-1.0' ]" | foreach {
+                    $_.parentNode.remove( $_ );                        
+                }
+                break;
+            }
+
+            '3$' {
+                $xml | select-packageXmlNode "/dts:Executable/dts:DesignTimeProperties" | foreach {
+                    $_.parentNode.remove( $_ );
+                }
+                break;
+            }
+            default {
+                write-warning "Unknown package version: $($version.Value)"
+            }
         }
 
-        if( $passThru )
-        {
-            $package;
-        }
+        $xml;
     }
 
 <# 
@@ -169,7 +183,7 @@ function clear-packageLayout
    .DESCRIPTION
     removes all DTS layout formatting from the package
    .EXAMPLE 
-    get-item myServer:/packages/myPackage | clear-packageLayout
+    get-item myServer:/packages/myPackage | reset-designTimeLayout
 
     Removes all DTS layout information from the package at the specified BIPS location
    .NOTES
@@ -412,7 +426,7 @@ function disable-validation
     
     process {
         $xml | select-packageXmlNode "//dts:Property[@dts:Name='DelayValidation']" | foreach {
-            $_.'#text' = '-1';
+             $_.'#text' = '-1';
         }
 
         $xml;
@@ -502,6 +516,7 @@ function find-componentMissingInputColumn
 
 function select-packageXmlNode
 {
+    [outputType( [System.Xml.XmlNode] )]
     param(
         [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [xml]
