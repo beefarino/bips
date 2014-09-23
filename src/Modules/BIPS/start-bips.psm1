@@ -200,34 +200,36 @@ function get-packageXml
 function save-package
 {
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
-        # the package to save, as either an XML document or package object
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, ParameterSetName='xml')]
+        [xml]
+        # the package XML to save
+        $xml,
+
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ParameterSetName='package')]
+        [CodeOwls.BIPS.Utility.PackageDescriptor]
+        # the package to save
         $package,
 
+        [Parameter(ParameterSetName='package')]
+        [Parameter(ParameterSetName='xml')]
         [alias("destination")]
         [string]
         # the file or folder location to output the package XML; if unspecified, defaults to the current filesystem location
-        $outputPath = (Get-Location -PSProvider filesystem)
+        $outputPath = (Get-Location -PSProvider filesystem),
+
+        [Parameter(ParameterSetName='package')]
+        [switch]
+        $passthru
     );
     
     process {
-        $isPackage = $package -is [CodeOwls.Bips.Utility.PackageDescriptor]
-        $isXml = $package -is [xml]
-
-        if (-not ($isXml -or $isPackage))
-        {
-            write-error "Unknown input type for save-packge: $($package.gettype().fullname)"
-            return;
-        }
-
-
-        if( $isPackage )
+        if( $package )
         {
             $originalFilePath = $package.Location;
         }
         else
         {
-            $originalFilePathNode = $package | select-packageXmlNode "//dts:Property[ @dts:Name='BIPSOriginalFilePath' ]";
+            $originalFilePathNode = $xml | select-packageXmlNode "//dts:Property[ @dts:Name='BIPSOriginalFilePath' ]";
             $originalFilePath = $originalFilePathNode.'#text';
             $originalFilePathNode.ParentNode.RemoveChild($originalFilePathNode) | out-null;
             write-debug "Original BIPS file path: $originalFilePath"
@@ -241,7 +243,7 @@ function save-package
         }
 
         write-debug "Saving package to file path: $path"
-        if( $isPackage )
+        if( $package )
         {            
             $ssisApplication.SaveToXml( $path, $package, $null );
             if($passthru)
@@ -251,8 +253,8 @@ function save-package
         }
         else
         {
-            $package.Save( $path );
-            $package;
+            $xml.Save( $path );
+            $xml;
         }        
     }
 
