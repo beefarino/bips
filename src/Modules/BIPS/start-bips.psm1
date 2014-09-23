@@ -106,36 +106,6 @@ function convertfrom-packageXml
 #> 
 }
 
-function save-package
-{
-    param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
-        [CodeOwls.BIPS.Utility.PackageDescriptor]
-        # the package to save
-        $package
-    );
-
-    process {
-        $pkg = $package;
-        $path = $package.Location;
-        $ssisApplication.SaveToXml( $path, $pkg, $null );
-    }
-
-<# 
-   .SYNOPSIS 
-    Saves the specified package to the local file system.
-   .DESCRIPTION
-    Saves the specified package to the local file system.
-   .EXAMPLE 
-    get-item myServer:/packages/myPackage | save-package
-
-    
-   .NOTES
-    AUTHOR: beefarino
-    LASTEDIT: 09/19/2014 14:08:57 
-#> 
-}
-
 function reset-designTimeLayout
 {
     param(
@@ -143,29 +113,25 @@ function reset-designTimeLayout
         [CodeOwls.Bips.Utility.XmlFile()]
         [xml]
         # the package XML to auto-layout
-        $xml,
-
-        [Parameter(ParameterSetName='package')]
-        [switch]
-        # when specified, drops the package back on the pipeline
-        $passThru
+        $xml
     );
 
     process {
 
         $version = $xml | select-packageXmlNode "/dts:Executable/@dts:ExecutableType";
+
         switch -Regex ( $version.Value )
         {
             '2$' { 
-                $xml | select-packageXmlNode "//dts:PackageVariable[ ./dts:Property[ @dts:Namespace='dts-designer-1.0' ] ]" | foreach {
-                    $_.parentNode.removeChild( $_ );                        
+                $xml | select-packageXmlNode "//dts:PackageVariable[ ./dts:Property[ @dts:Name='Namespace' and ./text()='dts-designer-1.0' ] ]" | foreach {
+                    $_.parentNode.removeChild( $_ ) | out-null;                        
                 }
                 break;
             }
 
             '3$' {
                 $xml | select-packageXmlNode "/dts:Executable/dts:DesignTimeProperties" | foreach {
-                    $_.parentNode.removeChild( $_ );
+                    $_.parentNode.removeChild( $_ ) | out-null;
                 }
                 break;
             }
@@ -183,9 +149,9 @@ function reset-designTimeLayout
    .DESCRIPTION
     removes all DTS layout formatting from the package
    .EXAMPLE 
-    get-item myServer:/packages/myPackage | reset-designTimeLayout
+    ls *.dtsx | reset-designTimeLayout
 
-    Removes all DTS layout information from the package at the specified BIPS location
+    Removes all DTS layout information from the packages in the current folder
    .NOTES
     AUTHOR: beefarino
     LASTEDIT: 09/19/2014 17:28:44 
@@ -231,32 +197,44 @@ function get-packageXml
 }
 
 
-function save-packageXml
+function save-package
 {
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, ParameterSetName='xml')]
         [xml]
-        # the package to load
+        # the package XML to save
         $xml,
 
-        [Parameter()]
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ParameterSetName='package')]
+        [CodeOwls.BIPS.Utility.PackageDescriptor]
+        # the package to save
+        $package,
+
+        [Parameter(ParameterSetName='package')]
+        [Parameter(ParameterSetName='xml')]
         [alias("destination")]
         [string]
         # the file or folder location to output the package XML; if unspecified, defaults to the current filesystem location
         $outputPath = (Get-Location -PSProvider filesystem),
 
-        [Parameter()]
+        [Parameter(ParameterSetName='package')]
         [switch]
         $passthru
     );
     
     process {
-        $originalFilePathNode = $xml | select-packageXmlNode "//dts:Property[ @dts:Name='BIPSOriginalFilePath' ]";
-        $originalFilePath = $originalFilePathNode.'#text';
-        $originalFilePathNode.ParentNode.RemoveChild($originalFilePathNode) | out-null;
-
-        write-debug "Original BIPS file path: $originalFilePath"
-
+        if( $package )
+        {
+            $originalFilePath = $package.Location;
+        }
+        else
+        {
+            $originalFilePathNode = $xml | select-packageXmlNode "//dts:Property[ @dts:Name='BIPSOriginalFilePath' ]";
+            $originalFilePath = $originalFilePathNode.'#text';
+            $originalFilePathNode.ParentNode.RemoveChild($originalFilePathNode) | out-null;
+            write-debug "Original BIPS file path: $originalFilePath"
+        }
+        
         $path =  $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($outputPath);
         if( -not [io.file]::exists( $path ) )
         {
@@ -264,22 +242,28 @@ function save-packageXml
             $path = $path | join-path -child $filename
         }
 
-        write-debug "Saving XML document to file path: $path"
-        $xml.Save( $path );
-
-        if($passthru)
-        {
-            $xml;
+        write-debug "Saving package to file path: $path"
+        if( $package )
+        {            
+            $ssisApplication.SaveToXml( $path, $package, $null );
+            if($passthru)
+            {
+                $package;
+            }
         }
-    }
+        else
+        {
+            $xml.Save( $path );
+            $xml;
+        }        
 
 <# 
    .SYNOPSIS 
-    saves the specified package XML file
+    saves the specified package to the local file system
    .DESCRIPTION
-    saves the specified package XML file
+    saves the specified package to the local file system
    .EXAMPLE 
-    ls *.dtsx | disable-validation | save-pacakgeXml
+    ls *.dtsx | disable-validation | save-pacakge
     
    .NOTES
     AUTHOR: beefarino
