@@ -136,10 +136,10 @@ function save-package
 #> 
 }
 
-function reset-deignTimeLayout
+function reset-designTimeLayout
 {
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ParameterSetName='xml')]
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
         [CodeOwls.Bips.Utility.XmlFile()]
         [xml]
         # the package XML to auto-layout
@@ -157,15 +157,15 @@ function reset-deignTimeLayout
         switch -Regex ( $version.Value )
         {
             '2$' { 
-                $xml | select-packageXmlNode "//dts:PackageVariable[ ./dts:Property[ @dts:Namespace='dts-designer-1.0' ]" | foreach {
-                    $_.parentNode.remove( $_ );                        
+                $xml | select-packageXmlNode "//dts:PackageVariable[ ./dts:Property[ @dts:Namespace='dts-designer-1.0' ] ]" | foreach {
+                    $_.parentNode.removeChild( $_ );                        
                 }
                 break;
             }
 
             '3$' {
                 $xml | select-packageXmlNode "/dts:Executable/dts:DesignTimeProperties" | foreach {
-                    $_.parentNode.remove( $_ );
+                    $_.parentNode.removeChild( $_ );
                 }
                 break;
             }
@@ -197,6 +197,7 @@ function get-packageXml
     param(
         [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [alias("pspath")]
+        [alias("fullname")]
         # the package to load
         $path
     );
@@ -242,7 +243,7 @@ function save-packageXml
         [alias("destination")]
         [string]
         # the file or folder location to output the package XML; if unspecified, defaults to the current filesystem location
-        $outputPath = (Get-Location filesystem),
+        $outputPath = (Get-Location -PSProvider filesystem),
 
         [Parameter()]
         [switch]

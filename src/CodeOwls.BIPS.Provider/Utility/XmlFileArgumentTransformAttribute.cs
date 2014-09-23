@@ -37,7 +37,7 @@ namespace CodeOwls.BIPS.Utility
                 return inputData;
             }
 
-            var results = engineIntrinsics.InvokeCommand.InvokeScript("get-packageXml", false, PipelineResultTypes.None, new ArrayList{inputData}, null);
+            var results = engineIntrinsics.InvokeCommand.InvokeScript("$input | get-packageXml", false, PipelineResultTypes.None, new ArrayList{inputData}, null);
             return results.FirstOrDefault();
         }
     }
