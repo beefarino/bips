@@ -123,7 +123,8 @@ function reset-designTimeLayout
         switch -Regex ( $version.Value )
         {
             '2$' { 
-                $xml | select-packageXmlNode "//dts:PackageVariable[ ./dts:Property[ @dts:Name='Namespace' and ./text()='dts-designer-1.0' ] ]" | foreach {
+                $xml | select-packageXmlNode ("//dts:PackageVariable[ ./dts:Property[ @dts:Name='Namespace' and ./text()='dts-designer-1.0' ] ] | " +
+                        "//dts:Variable[ ./dts:Property[ @dts.Name='ObjectName' and ( ./text()='varSSISOps_PkgLayout' or ./text()='varSSISOps_DfLayout' ) ]")| foreach {
                     $_.parentNode.removeChild( $_ ) | out-null;                        
                 }
                 break;
@@ -131,7 +132,14 @@ function reset-designTimeLayout
 
             '3$' {
                 $xml | select-packageXmlNode "/dts:Executable/dts:DesignTimeProperties" | foreach {
-                    $_.parentNode.removeChild( $_ ) | out-null;
+                    
+                    $dtxml = [xml]$_.'#cdata-section';
+                    $dtxml | select-packageXmlNode "//graph:NodeLayout | //graph:EdgeLayout" | foreach {
+                        $_.parentNode.removeChild( $_ ) | out-null;
+                    }
+                    
+                    $xmlstr = $dtxml.OuterXml;
+                    $_.'#cdata-section' = $xmlstr;
                 }
                 break;
             }
@@ -516,6 +524,7 @@ function select-packageXmlNode
 
     $nsm = new-object System.Xml.XmlNamespaceManager $xml.NameTable;
     $nsm.AddNamespace( 'dts',$dtsns );
+    $nsm.AddNamespace( 'graph', "clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" );
         
     $xml.SelectNodes( $xpath, $nsm );
 

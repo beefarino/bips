@@ -24,6 +24,9 @@ namespace CodeOwls.BIPS
             nodes.Add(new CollectionNodeFactory<IDTSExternalMetadataColumn100>("Metadata", 
                 _input.ExternalMetadataColumnCollection.Cast<IDTSExternalMetadataColumn100>(), 
                 c => new DataFlowMetadataColumnNodeFactory(c)));
+
+            nodes.Add(new CollectionNodeFactory<InputColumnMapping>("Mappings", GetColumnMappings(), c=>new InputColumnMappingNodeFactory(c)));
+
             return nodes;           
         }
 
@@ -36,5 +39,25 @@ namespace CodeOwls.BIPS
         {
             get { return _input.Name; }
         }
-    }
+
+        IEnumerable<InputColumnMapping> GetColumnMappings()
+        {
+            var mappings = new List<InputColumnMapping>();
+
+            var m = from input in _input.InputColumnCollection.Cast<IDTSInputColumn100>()
+                let mapped =
+                    _input.ExternalMetadataColumnCollection.Cast<IDTSExternalMetadataColumn100>().FirstOrDefault(c => c.ID == input.ExternalMetadataColumnID)                
+                select new InputColumnMapping(input, mapped);
+
+            mappings.AddRange(m);
+
+            m = from mapped in _input.ExternalMetadataColumnCollection.Cast<IDTSExternalMetadataColumn100>()
+                where null == _input.InputColumnCollection.Cast<IDTSInputColumn100>().FirstOrDefault(c => c.ExternalMetadataColumnID == mapped.ID)
+                select new InputColumnMapping(null, mapped);
+
+            mappings.AddRange(m);
+
+            return mappings;
+        }
+    }    
 }

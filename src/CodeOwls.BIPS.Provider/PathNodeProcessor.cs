@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Text.RegularExpressions;
+using CodeOwls.BIPS.Utility;
 using CodeOwls.PowerShell.Paths.Processors;
 using CodeOwls.PowerShell.Provider.PathNodeProcessors;
 using CodeOwls.PowerShell.Provider.PathNodes;
@@ -23,6 +24,12 @@ namespace CodeOwls.BIPS
         public override System.Collections.Generic.IEnumerable<INodeFactory> ResolvePath(
             PowerShell.Provider.PathNodeProcessors.IContext context, string path)
         {
+            var nf = PathCache.Get(path);
+            if (null != nf)
+            {
+                return nf;
+            }
+
             var driveInfo = GetDriveFromPath(context, path);
 
             if (null == driveInfo)
@@ -47,7 +54,11 @@ namespace CodeOwls.BIPS
                 _root = new BipsRootNodeFactory(driveInfo);
             }
 
-            return base.ResolvePath(context, path);
+            var nodes = base.ResolvePath(context, path).ToList();
+
+            PathCache.Add( path, nodes );
+
+            return nodes;
         }
 
         private static BipsDrive GetDriveFromPath(IContext context, string path)

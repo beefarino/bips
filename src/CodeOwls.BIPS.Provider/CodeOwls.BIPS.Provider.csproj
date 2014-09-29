@@ -82,6 +82,7 @@
     <Compile Include="DtsNameObjectNodeFactory.cs" />
     <Compile Include="ExecutableNodeFactory.cs" />
     <Compile Include="GetDeployedPackageCmdet.cs" />
+    <Compile Include="InputColumnMappingNodeFactory.cs" />
     <Compile Include="LogProviderInfoNodeFactory.cs" />
     <Compile Include="ObjectNodeFactory.cs" />
     <Compile Include="PackageConfigurationNodeFactory.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="TaskNodeFactory.cs" />
     <Compile Include="Utility\PackageCache.cs" />
     <Compile Include="Utility\PackageDescriptor.cs" />
+    <Compile Include="Utility\PathCache.cs" />
     <Compile Include="Utility\ServerPackageProxy.cs" />
     <Compile Include="Utility\SsisDbHelper.cs" />
     <Compile Include="Utility\XmlFileArgumentTransformAttribute.cs" />

@@ -10,6 +10,7 @@ using Microsoft.SqlServer.Dts.Runtime;
 
 namespace CodeOwls.BIPS
 {
+      
     public class ExecutableNodeFactory : NodeFactoryBase, IRemoveItem
     {
         private readonly Executables _collection;
