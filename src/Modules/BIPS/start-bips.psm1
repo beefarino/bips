@@ -74,6 +74,36 @@ function update-packageFromXml
 #> 
 }
 
+function get-package
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [Alias("pspath")]
+        [string]
+        # the existing package to update
+        $path
+    );
+
+    process {
+        $packagePath = $path -replace 'packages\\([^\\]+)\\.+', 'packages\$1'
+        $packagePath | get-item;
+    }
+<# 
+   .SYNOPSIS 
+    Resolves the package for the specified BIPS drive element.
+   .DESCRIPTION
+    Resolves the package for the specified BIPS drive element.
+   .EXAMPLE 
+    ls -rec | where hasExpression | select PSChildName, PSPath, @{n='Package';e={$_|get-package|select -exp name}}
+
+    outputs the list of items that use expressions, and their associated packages
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 10/01/2014 15:24:36
+#> 
+}
+
+
 function convertfrom-packageXml
 {
     param(
