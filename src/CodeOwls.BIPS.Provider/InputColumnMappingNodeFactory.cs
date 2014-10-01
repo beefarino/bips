@@ -29,7 +29,7 @@ namespace CodeOwls.BIPS
             get { return null == InputColumn ? "<ignore>" : InputColumn.Name; }
         }
 
-        public string OuputColumnName
+        public string OutputColumnName
         {
             get { return null == OutputColumn ? (string)null : OutputColumn.Name; }
         }

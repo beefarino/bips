@@ -90,6 +90,7 @@
     <Compile Include="PackageNodeFactory.cs" />
     <Compile Include="PathNodeProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Proxies.cs" />
     <Compile Include="SsisFolderNodeFactory.cs" />
     <Compile Include="SsisProjectNodeFactory.cs" />
     <Compile Include="TaskInfoNodeFactory.cs" />

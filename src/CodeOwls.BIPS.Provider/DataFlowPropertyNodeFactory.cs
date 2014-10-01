@@ -14,7 +14,7 @@ namespace CodeOwls.BIPS
 
         public override IPathNode GetNodeValue()
         {
-            return new LeafPathNode(_input, Name);
+            return new LeafPathNode( new BipsProxyIDTSCustomProperty100( _input ), Name);
         }
 
         public override string Name

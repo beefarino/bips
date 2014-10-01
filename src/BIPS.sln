@@ -7,6 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeOwls.PowerShell.Paths",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeOwls.PowerShell.Provider", "CodeOwls.PowerShell\CodeOwls.PowerShell.Provider\CodeOwls.PowerShell.Provider.csproj", "{B352375B-7C58-4943-95C0-14871E17A208}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StudioShellScripts", "StudioShellScripts", "{F5913B40-E73F-44CD-AA97-86012526AC53}"
+	ProjectSection(SolutionItems) = preProject
+		StudioShellScripts\new-interfacewrapper.ps1 = StudioShellScripts\new-interfacewrapper.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

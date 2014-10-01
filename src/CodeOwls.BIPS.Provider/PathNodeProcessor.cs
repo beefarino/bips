@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
+using System.Net.Mime;
 using System.Text.RegularExpressions;
 using CodeOwls.BIPS.Utility;
 using CodeOwls.PowerShell.Paths.Processors;
@@ -24,6 +25,8 @@ namespace CodeOwls.BIPS
         public override System.Collections.Generic.IEnumerable<INodeFactory> ResolvePath(
             PowerShell.Provider.PathNodeProcessors.IContext context, string path)
         {
+            path = context.SessionState.Path.GetUnresolvedProviderPathFromPSPath(path);
+            
             var nf = PathCache.Get(path);
             if (null != nf)
             {

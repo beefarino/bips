@@ -26,7 +26,7 @@ namespace CodeOwls.BIPS
 
         public override IPathNode GetNodeValue()
         {
-            return new ContainerPathNode( _inputColumn, Name );
+            return new ContainerPathNode( new BipsProxyIDTSInputColumn100( _inputColumn ), Name );
         }
 
         public override string Name

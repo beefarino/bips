@@ -32,7 +32,7 @@ namespace CodeOwls.BIPS
 
         public override IPathNode GetNodeValue()
         {
-            return new ContainerPathNode( _input, Name );
+            return new ContainerPathNode( new BipsProxyIDTSInput100( _input ), Name );
         }
 
         public override string Name
