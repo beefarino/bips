@@ -80,13 +80,13 @@ function get-package
         [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [Alias("pspath")]
         [string]
-        # the existing package to update
+        # a path to a BIPS drive element
         $path
     );
 
     process {
-        $packagePath = $path -replace 'packages\\([^\\]+)\\.+', 'packages\$1'
-        $packagePath | get-item;
+        
+        $path | get-packagePath | get-item;
     }
 <# 
    .SYNOPSIS 
@@ -103,6 +103,200 @@ function get-package
 #> 
 }
 
+function get-packagePath
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [Alias("pspath")]
+        [string]
+        # a path to a BIPS drive element
+        $path
+    );
+
+    process {
+        
+        if( $path -notmatch 'packages\\([^\\]+)\\.+' )
+        {
+            return;
+        }
+
+        $packagePath = $path -replace 'packages\\([^\\]+)\\.+', 'packages\$1';
+        $packagePath;
+    }
+<# 
+   .SYNOPSIS 
+    Resolves the path to the package for the specified BIPS drive element.
+   .DESCRIPTION
+    Resolves the path to the package for the specified BIPS drive element.
+   .EXAMPLE 
+    ls -rec | where hasExpression | select PSChildName, PSPath, @{n='PackagePath';e={$_|get-packagePath}}
+
+    outputs the list of items that use expressions, and their associated package paths
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 10/01/2014 15:24:36
+#> 
+}
+
+function get-component
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [Alias("pspath")]
+        [string]
+        # a path to a BIPS drive element
+        $path
+    );
+
+    process {
+        
+        if( $path -notmatch 'packages\\([^\\]+)\\executables\\([^\\]+)' )
+        {
+            return;
+        }
+
+        $componentPath = $path -replace 'packages\\([^\\]+)\\executables\\([^\\]+)\\.+', 'packages\$1\executables\$2';
+        $componentPath | get-item;
+    }
+<# 
+   .SYNOPSIS 
+    Resolves the main component containing the specified BIPS drive element.
+   .DESCRIPTION
+    Resolves the main component containing the specified BIPS drive element.
+   .EXAMPLE 
+    ls -rec | where hasExpression | select PSChildName, PSPath, @{n='Component';e={$_|get-component|select -exp name}}
+
+    outputs the list of items that use expressions, and their associated packages
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 10/01/2014 15:24:36
+#> 
+}
+
+function get-connectionManager
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [Alias("pspath")]
+        [string]
+        # a path to a BIPS drive element
+        $path,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [string]
+        # the name of the connection manager to retrieve
+        $connection,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [string]
+        # the connection manager id to retrieve
+        $connectionmanagerid
+    );
+
+    process {
+        if( -not( $connectionmanagerid -or $connection ) )
+        {
+            return;
+        }
+
+        $path | get-packagePath | join-path -child connections | get-childItem | where {
+            ( $connectionmanagerid -and ( $_.ID -eq  $connectionmanagerid ) ) -or ( $connection -and ( $_.name -eq  $connection ) ) 
+        };
+    }
+<# 
+   .SYNOPSIS 
+    Retrieves the connection manager for the input object.
+   .DESCRIPTION
+    Retrieves the connection manager for the input object.
+   .EXAMPLE 
+    get-item . | get-connectionManager
+
+    outputs the connection manager associated with the specified object
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 10/01/2014 15:24:36
+#> 
+}
+
+function get-expression
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [Alias("pspath")]
+        [string]
+        # a path to a BIPS drive element
+        $path,
+
+        [Parameter()]
+        [switch]
+        # when specified, all expressions child nodes under the specified path are output
+        $recurse,
+
+        [Parameter()]
+        [switch]
+        # when specified, all properties, including those with no expressions, are included in the output
+        $force
+    );
+
+    process {
+        $items = @(get-item $path) | where hasExpressions;
+        if( $recurse ) {
+            $items += dir $path -recurse | where hasExpressions;
+        }
+
+        $items | foreach {
+            $item = $_;
+            $component | get-component;
+            $package = $null;
+            $props = $item | select -ExpandProperty properties;
+            
+            $props | foreach {
+                $prop = $_;
+
+                $expr = $_.getExpression($item);
+                if( $force -or $expr )
+                {
+                    if( -not $package )
+                    {
+                        $package = $item | get-package;
+                    }
+
+                    $o =  new-object  psobject -prop @{
+                        Component = $component;
+                        Package = $package;
+                        Item = $item;
+                        Property = $prop;
+                        Expression = $expr;
+                    };
+                    $o.PSTypeNames.Clear();
+                    $o.PSTypeNames.Add( "CodeOwls.BIPS.ExpressionDescriptor" );
+
+                    $o;
+                }
+            }
+        }
+        
+    }
+<# 
+   .SYNOPSIS 
+    Outputs all expressions employed by the BIPS object at the specified path.
+   .DESCRIPTION
+    Outputs all expressions employed by the BIPS object at the specified path.
+
+    When -recurse is specified, objects contained by the specified path are also output.
+   .EXAMPLE 
+    get-expression . 
+
+    outputs the expressions employed by the object at the current BIPS path
+   .EXAMPLE 
+    get-expression . -recurse
+
+    outputs the expressions employed by all objects at or under the current BIPS path
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 10/01/2014 15:24:36
+#> 
+}
 
 function convertfrom-packageXml
 {
@@ -575,3 +769,57 @@ function select-packageXmlNode
     LASTEDIT: 09/22/2014 14:34:22 
 #> 
 }
+
+@(
+    'Microsoft.SqlServer.Dts.Runtime.Application', 
+    'Microsoft.SqlServer.Dts.Runtime.ConnectionManagerBase',
+    'Microsoft.SqlServer.Dts.Runtime.ConnectionManager',
+    'Microsoft.SqlServer.Dts.Runtime.HttpClientConnection',
+    'Microsoft.SqlServer.Dts.Runtime.ConnectionManagerItem',
+    'Microsoft.SqlServer.Dts.Runtime.ManagedWrapper',
+    'Microsoft.SqlServer.Dts.Runtime.Package',
+    'Microsoft.SqlServer.Dts.Runtime.Project',
+    'Microsoft.SqlServer.Dts.Runtime.DtsProperty',
+    'Microsoft.SqlServer.Dts.Runtime.DtsConnectionAttribute',
+    'Microsoft.SqlServer.Dts.Runtime.ConnectionInfo',
+    'Microsoft.SqlServer.Dts.Runtime.PackageUpgradeOptions',
+    'Microsoft.SqlServer.Dts.Runtime.Localized',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.IDTSPackage100',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.IDTSProperty100',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.PackageClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.PackageNeutralClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.PackageRemote32Class',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.PackageRemote64Class',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.IDTSConnectionManager100',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.ConnectionManagerHostClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.IDTSConnectionManagerDatabaseParameters100',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.ConnectionManagerOleDbClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.ConnectionManagerOLAPClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.ConnectionManagerOdbcClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.ConnectionManagerAdoClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.ConnectionManagerAdoNetClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.ConnectionManagerSqlMobileClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.ConnectionManagerFileClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.ConnectionManagerMultiFileClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.ConnectionManagerFlatFileClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.ConnectionManagerMultiFlatFileClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.IDTSApplication100',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.ApplicationClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.IDTSConnectionManagerHttp100',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.ConnectionManagerHttpClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.IDTSHttpClientConnection100',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.HttpClientConnection100Class',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.ConnectionManagerFtpClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.ConnectionManagerExcelClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.ConnectionManagerCacheClass',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.IDTSConnectionInfo100',
+    'Microsoft.SqlServer.Dts.Runtime.Wrapper.IDTSManagedWrapper100',
+    'Microsoft.PowerShell.Cmdletization.Cim.CimCmdletDefinitionContext',
+    'Microsoft.SqlServer.Dts.Pipeline.Wrapper.IDTSComponentMetaData100',
+    'Microsoft.SqlServer.Dts.Pipeline.Wrapper.IDTSRuntimeConnection100',
+    'CodeOwls.BIPS.BipsProxyIDTSComponentMetaData100',
+    'CodeOwls.BIPS.BipsProxyIDTSRuntimeConnection100',
+    'CodeOwls.BIPS.Utility.PackageDescriptor' 
+ ) | Update-TypeData -MemberType ScriptProperty -MemberName 'ConnectionManager' -value {
+    $this | get-connectionManager     
+};

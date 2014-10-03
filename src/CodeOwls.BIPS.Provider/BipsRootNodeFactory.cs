@@ -70,7 +70,7 @@ namespace CodeOwls.BIPS
         protected void GetCommonNodeFactories(List<INodeFactory> nodes)
         {
             var connectionInfos = Application.ConnectionInfos.Cast<ConnectionInfo>().ToList();
-            nodes.Add(new CollectionNodeFactory<ConnectionInfo>("Connections", connectionInfos,
+            nodes.Add(new CollectionNodeFactory<ConnectionInfo>("ConnectionTypes", connectionInfos,
                 a => new DtsNameObjectNodeFactory(a)));
 
             var typeInfos = Application.DataTypeInfos.Cast<DataTypeInfo>().ToList();
@@ -84,7 +84,7 @@ namespace CodeOwls.BIPS
                 a => new LogProviderInfoNodeFactory(a)));
 
             var taskInfos = Application.TaskInfos.Cast<TaskInfo>().ToList();
-            nodes.Add(new CollectionNodeFactory<TaskInfo>("Tasks", taskInfos, a => new TaskInfoNodeFactory(a)));
+            nodes.Add(new CollectionNodeFactory<TaskInfo>("TaskTypes", taskInfos, a => new TaskInfoNodeFactory(a)));
         }
 
         private IEnumerable<PackageDescriptor> LoadCatalogPackages(IContext context, ProgressRecord progress)

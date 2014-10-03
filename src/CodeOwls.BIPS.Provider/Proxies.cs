@@ -2809,12 +2809,6 @@ namespace CodeOwls.BIPS
             get { return _innerObject.ConnectionManagerID; }
             set { _innerObject.ConnectionManagerID = value; }
         }
-
-        public Microsoft.SqlServer.Dts.Runtime.Wrapper.IDTSConnectionManager100 ConnectionManager
-        {
-            get { return _innerObject.ConnectionManager; }
-            set { _innerObject.ConnectionManager = value; }
-        }
     }
 
     public class BipsProxyIDTSManagedComponentWrapper100

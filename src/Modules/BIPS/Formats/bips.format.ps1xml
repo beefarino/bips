@@ -546,6 +546,27 @@
         </CustomEntries>
       </CustomControl>
     </Control>
+    <Control>
+      <Name>ExpressionDescriptor-GroupingFormat</Name>
+      <CustomControl>
+        <CustomEntries>
+          <CustomEntry>
+            <CustomItem>
+              <Frame>
+                <LeftIndent>4</LeftIndent>
+                <CustomItem>
+                  <Text>Package: </Text>
+                  <ExpressionBinding>
+                    <ScriptBlock>$_.Package.Name</ScriptBlock>
+                  </ExpressionBinding>
+                  <NewLine />
+                </CustomItem>
+              </Frame>
+            </CustomItem>
+          </CustomEntry>
+        </CustomEntries>
+      </CustomControl>
+    </Control>
   </Controls>
   <ViewDefinitions>
     <View>
@@ -852,7 +873,7 @@
                 <PropertyName>SSItemMode</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <ScriptBlock>if($_.hasExpression){'*'}</ScriptBlock>
+                <ScriptBlock>if($_.hasExpressions){'*'}</ScriptBlock>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>Location</PropertyName>
@@ -953,7 +974,7 @@
                 <PropertyName>ConnectionString</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <ScriptBlock>if($_.hasExpression){'*'}</ScriptBlock>
+                <ScriptBlock>if($_.hasExpressions){'*'}</ScriptBlock>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>HostType</PropertyName>
@@ -1215,7 +1236,7 @@
                 <PropertyName>SSItemMode</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <ScriptBlock>if($_.hasExpression){'*'}</ScriptBlock>
+                <ScriptBlock>if($_.hasExpressions){'*'}</ScriptBlock>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>Name</PropertyName>
@@ -1671,6 +1692,320 @@
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>PSChildName</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>InputMapping-View</Name>
+      <ViewSelectedBy>
+        <TypeName>CodeOwls.BIPS.InputColumnMapping</TypeName>
+      </ViewSelectedBy>
+      <GroupBy>
+        <PropertyName>PSParentPath</PropertyName>
+        <CustomControlName>InputMapping-GroupingFormat</CustomControlName>
+      </GroupBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>
+            </Label>
+            <Alignment>Left</Alignment>
+            <Width>10</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Input Column</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Output Column</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>SSItemMode</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>InputColumnName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>OutputColumnName</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>InputColumn-View</Name>
+      <ViewSelectedBy>
+        <TypeName>CodeOwls.BIPS.BipsProxyIDTSInputColumn100</TypeName>
+      </ViewSelectedBy>
+      <GroupBy>
+        <PropertyName>PSParentPath</PropertyName>
+        <CustomControlName>InputMapping-GroupingFormat</CustomControlName>
+      </GroupBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>
+            </Label>
+            <Alignment>Left</Alignment>
+            <Width>10</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>DataType</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Name</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>SSItemMode</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>DataType</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>PSChildName</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>OutputColumn-View</Name>
+      <ViewSelectedBy>
+        <TypeName>CodeOwls.BIPS.BipsProxyIDTSOutputColumn100</TypeName>
+      </ViewSelectedBy>
+      <GroupBy>
+        <PropertyName>PSParentPath</PropertyName>
+        <CustomControlName>InputMapping-GroupingFormat</CustomControlName>
+      </GroupBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>
+            </Label>
+            <Alignment>Left</Alignment>
+            <Width>10</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>DataType</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Name</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>SSItemMode</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>DataType</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>PSChildName</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>ComponentMetadata-View</Name>
+      <ViewSelectedBy>
+        <TypeName>CodeOwls.BIPS.BipsProxyIDTSComponentMetaData100</TypeName>
+      </ViewSelectedBy>
+      <GroupBy>
+        <PropertyName>PSParentPath</PropertyName>
+        <CustomControlName>InputMapping-GroupingFormat</CustomControlName>
+      </GroupBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>
+            </Label>
+            <Alignment>Left</Alignment>
+            <Width>10</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>ID</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Name</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>SSItemMode</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>ID</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>PSChildName</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>RuntimeConnection-View</Name>
+      <ViewSelectedBy>
+        <TypeName>CodeOwls.BIPS.BipsProxyIDTSRuntimeConnection100</TypeName>
+      </ViewSelectedBy>
+      <GroupBy>
+        <PropertyName>PSParentPath</PropertyName>
+        <CustomControlName>InputMapping-GroupingFormat</CustomControlName>
+      </GroupBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>
+            </Label>
+            <Alignment>Left</Alignment>
+            <Width>10</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Connection Manager</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Name</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>SSItemMode</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>get-childitem /connections | where id -eq $_.ConnectionManagerId | select -first 1 | select -expand Name</ScriptBlock>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>PSChildName</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>InputOutput-View</Name>
+      <ViewSelectedBy>
+        <TypeName>CodeOwls.BIPS.BipsProxyIDTSInput100</TypeName>
+        <TypeName>CodeOwls.BIPS.BipsProxyIDTSOutput100</TypeName>
+      </ViewSelectedBy>
+      <GroupBy>
+        <PropertyName>PSParentPath</PropertyName>
+        <CustomControlName>InputMapping-GroupingFormat</CustomControlName>
+      </GroupBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>
+            </Label>
+            <Alignment>Left</Alignment>
+            <Width>10</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>IsAttached</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Name</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>SSItemMode</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>IsAttached</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>PSChildName</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>ExpressionDescriptor-View</Name>
+      <ViewSelectedBy>
+        <TypeName>CodeOwls.BIPS.ExpressionDescriptor</TypeName>
+      </ViewSelectedBy>
+      <GroupBy>
+        <PropertyName>Package</PropertyName>
+        <CustomControlName>ExpressionDescriptor-GroupingFormat</CustomControlName>
+      </GroupBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>Package</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Component</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Item</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Property</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Expression</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <ScriptBlock>$_.Package.Name</ScriptBlock>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>$_.Component.Name</ScriptBlock>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>$_.Item.Name</ScriptBlock>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>$_.Property.Name</ScriptBlock>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>$_.Expression</ScriptBlock>
               </TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>
