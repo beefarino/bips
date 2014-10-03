@@ -190,7 +190,17 @@ function get-connectionManager
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [string]
         # the connection manager id to retrieve
-        $connectionmanagerid
+        $connectionmanagerid,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [string]
+        # the name of the destination connection manager to retrieve
+        $destinationconnection,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [string]
+        # the name of the source connection manager to retrieve
+        $sourceconnection
     );
 
     process {
@@ -246,7 +256,7 @@ function get-expression
 
         $items | foreach {
             $item = $_;
-            $component | get-component;
+            $component = $item | get-component;
             $package = $null;
             $props = $item | select -ExpandProperty properties;
             
@@ -292,6 +302,37 @@ function get-expression
     get-expression . -recurse
 
     outputs the expressions employed by all objects at or under the current BIPS path
+   .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 10/01/2014 15:24:36
+#> 
+}
+
+function set-expression
+{
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
+        # the expression property to set, as retrieved by get-expression
+        $expression,
+
+        [Parameter(Mandatory=$true)]
+        [string]
+        # when specified, all expressions child nodes under the specified path are output
+        $value
+    );
+
+    process {
+        $expr = $expression.expression;
+        $item = $expression.item;
+        $prop = $expression.property;
+        $prop.setExpression($item, $value);        
+    }
+<# 
+   .SYNOPSIS 
+    Sets the expression for the specified property.
+   .DESCRIPTION
+    Sets the expression for the specified property.    
+   .EXAMPLE 
    .NOTES
     AUTHOR: beefarino
     LASTEDIT: 10/01/2014 15:24:36
@@ -814,9 +855,19 @@ function select-packageXmlNode
     'Microsoft.SqlServer.Dts.Runtime.Wrapper.ConnectionManagerCacheClass',
     'Microsoft.SqlServer.Dts.Runtime.Wrapper.IDTSConnectionInfo100',
     'Microsoft.SqlServer.Dts.Runtime.Wrapper.IDTSManagedWrapper100',
+    'Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask',
     'Microsoft.PowerShell.Cmdletization.Cim.CimCmdletDefinitionContext',
     'Microsoft.SqlServer.Dts.Pipeline.Wrapper.IDTSComponentMetaData100',
     'Microsoft.SqlServer.Dts.Pipeline.Wrapper.IDTSRuntimeConnection100',
+    
+    'Microsoft.SqlServer.Dts.Tasks.TransferDatabaseTask.TransferDatabaseTask',
+    'Microsoft.SqlServer.Dts.Tasks.BulkInsertTask.BulkInsertTask',
+    'Microsoft.SqlServer.Dts.Tasks.TransferErrorMessagesTask.TransferErrorMessagesTask',
+    'Microsoft.SqlServer.Dts.Tasks.TransferJobsTask.TransferJobsTask',
+    'Microsoft.SqlServer.Dts.Tasks.TransferLoginsTask.TransferLoginsTask',
+    'Microsoft.SqlServer.Dts.Tasks.TransferSqlServerObjectsTask.TransferSqlServerObjectsTask',
+    'Microsoft.SqlServer.Dts.Tasks.TransferStoredProceduresTask.TransferStoredProceduresTask',
+
     'CodeOwls.BIPS.BipsProxyIDTSComponentMetaData100',
     'CodeOwls.BIPS.BipsProxyIDTSRuntimeConnection100',
     'CodeOwls.BIPS.Utility.PackageDescriptor' 
