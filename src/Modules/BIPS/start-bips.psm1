@@ -856,7 +856,6 @@ function select-packageXmlNode
     'Microsoft.SqlServer.Dts.Runtime.Wrapper.IDTSConnectionInfo100',
     'Microsoft.SqlServer.Dts.Runtime.Wrapper.IDTSManagedWrapper100',
     'Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask',
-    'Microsoft.PowerShell.Cmdletization.Cim.CimCmdletDefinitionContext',
     'Microsoft.SqlServer.Dts.Pipeline.Wrapper.IDTSComponentMetaData100',
     'Microsoft.SqlServer.Dts.Pipeline.Wrapper.IDTSRuntimeConnection100',
     
@@ -873,4 +872,20 @@ function select-packageXmlNode
     'CodeOwls.BIPS.Utility.PackageDescriptor' 
  ) | Update-TypeData -MemberType ScriptProperty -MemberName 'ConnectionManager' -value {
     $this | get-connectionManager     
+};
+
+@(
+    'Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask',   
+    'Microsoft.SqlServer.Dts.Tasks.TransferDatabaseTask.TransferDatabaseTask',
+    'Microsoft.SqlServer.Dts.Tasks.BulkInsertTask.BulkInsertTask',
+    'Microsoft.SqlServer.Dts.Tasks.TransferErrorMessagesTask.TransferErrorMessagesTask',
+    'Microsoft.SqlServer.Dts.Tasks.TransferJobsTask.TransferJobsTask',
+    'Microsoft.SqlServer.Dts.Tasks.TransferLoginsTask.TransferLoginsTask',
+    'Microsoft.SqlServer.Dts.Tasks.TransferSqlServerObjectsTask.TransferSqlServerObjectsTask',
+    'Microsoft.SqlServer.Dts.Tasks.TransferStoredProceduresTask.TransferStoredProceduresTask',
+
+    'CodeOwls.BIPS.BipsProxyIDTSCustomProperty100'
+ ) | Update-TypeData -MemberType ScriptProperty -MemberName 'Sql' -value {
+    if($this.name -eq 'OpenRowset') { $this.value }
+    else { $this.sqlstatementsource }
 };
