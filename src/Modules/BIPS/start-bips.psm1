@@ -204,11 +204,11 @@ function get-connectionManager
     );
 
     process {
-        if( -not( $connectionmanagerid -or $connection ) )
+        if( -not( $connectionmanagerid -or $connection -or $destinationconnection -or $sourceconnection) )
         {
             return;
         }
-
+    
         $path | get-packagePath | join-path -child connections | get-childItem | where {
             ( $connectionmanagerid -and ( $_.ID -eq  $connectionmanagerid ) ) -or ( $connection -and ( $_.name -eq  $connection ) ) 
         };

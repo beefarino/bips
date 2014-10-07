@@ -16,7 +16,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -42,7 +42,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -68,7 +68,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -94,7 +94,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -120,7 +120,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -146,7 +146,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -172,7 +172,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -198,7 +198,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -224,7 +224,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -250,7 +250,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -276,7 +276,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -302,7 +302,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -328,7 +328,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -354,7 +354,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -380,7 +380,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -406,7 +406,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -432,7 +432,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -458,7 +458,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -484,7 +484,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -510,7 +510,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -536,7 +536,7 @@
                   <NewLine />
                   <Text>Available Operations: </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>(get-item `$_.PSParentPath).SSItemMode</ScriptBlock>
+                    <ScriptBlock>(get-item $_.PSParentPath).SSItemMode</ScriptBlock>
                   </ExpressionBinding>
                   <NewLine />
                 </CustomItem>
@@ -1569,6 +1569,49 @@
       </TableControl>
     </View>
     <View>
+      <Name>MetadataColumn-View</Name>
+      <ViewSelectedBy>
+        <TypeName>CodeOwls.BIPS.BipsProxyIDTSExternalMetadataColumn100</TypeName>
+      </ViewSelectedBy>
+      <GroupBy>
+        <PropertyName>PSParentPath</PropertyName>
+        <CustomControlName>InputMapping-GroupingFormat</CustomControlName>
+      </GroupBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>
+            </Label>
+            <Alignment>Left</Alignment>
+            <Width>10</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>DataType</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Name</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>SSItemMode</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>DataType</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>PSChildName</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
       <Name>RuntimeConnection-View</Name>
       <ViewSelectedBy>
         <TypeName>CodeOwls.BIPS.BipsProxyIDTSRuntimeConnection100</TypeName>
@@ -1601,7 +1644,7 @@
                 <PropertyName>SSItemMode</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <ScriptBlock>get-childitem /connections | where id -eq $_.ConnectionManagerId | select -first 1 | select -expand Name</ScriptBlock>
+                <ScriptBlock>$_.ConnectionManager.Name</ScriptBlock>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>PSChildName</PropertyName>
@@ -1903,7 +1946,7 @@
                 <PropertyName>SSItemMode</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <ScriptBlock>get-childitem /connections | where id -eq $_.ConnectionManagerId | select -first 1 | select -expand Name</ScriptBlock>
+                <ScriptBlock>$_.ConnectionManager.Name</ScriptBlock>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>PSChildName</PropertyName>
@@ -1948,6 +1991,100 @@
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>IsAttached</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>PSChildName</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>InputOutput-View</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.SqlServer.Dts.Runtime.DtsEventHandler</TypeName>
+      </ViewSelectedBy>
+      <GroupBy>
+        <PropertyName>PSParentPath</PropertyName>
+        <CustomControlName>InputMapping-GroupingFormat</CustomControlName>
+      </GroupBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>
+            </Label>
+            <Alignment>Left</Alignment>
+            <Width>10</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>HasExpressions</Label>
+            <Alignment>center</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Name</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>SSItemMode</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>if($_.hasExpressions){'*'}</ScriptBlock>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>PSChildName</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>DtsProperty-View</Name>
+      <ViewSelectedBy>
+        <TypeName>Microsoft.SqlServer.Dts.Runtime.DtsProperty</TypeName>
+      </ViewSelectedBy>
+      <GroupBy>
+        <PropertyName>PSParentPath</PropertyName>
+        <CustomControlName>InputMapping-GroupingFormat</CustomControlName>
+      </GroupBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>
+            </Label>
+            <Alignment>Left</Alignment>
+            <Width>10</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Get</Label>
+            <Alignment>center</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Set</Label>
+            <Alignment>center</Alignment>
+          </TableColumnHeader>
+          
+          <TableColumnHeader>
+            <Label>Name</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>SSItemMode</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>if($_.Get){'*'}</ScriptBlock>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>if($_.Set){'*'}</ScriptBlock>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>PSChildName</PropertyName>

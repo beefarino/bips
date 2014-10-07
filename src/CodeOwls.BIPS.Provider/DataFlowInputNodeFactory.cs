@@ -42,22 +42,16 @@ namespace CodeOwls.BIPS
 
         IEnumerable<InputColumnMapping> GetColumnMappings()
         {
-            var mappings = new List<InputColumnMapping>();
-
             var m = from input in _input.InputColumnCollection.Cast<IDTSInputColumn100>()
                 let mapped =
                     _input.ExternalMetadataColumnCollection.Cast<IDTSExternalMetadataColumn100>().FirstOrDefault(c => c.ID == input.ExternalMetadataColumnID)                
                 select new InputColumnMapping(input, mapped);
 
-            mappings.AddRange(m);
-
-            m = from mapped in _input.ExternalMetadataColumnCollection.Cast<IDTSExternalMetadataColumn100>()
+            m = m.Union(from mapped in _input.ExternalMetadataColumnCollection.Cast<IDTSExternalMetadataColumn100>()
                 where null == _input.InputColumnCollection.Cast<IDTSInputColumn100>().FirstOrDefault(c => c.ExternalMetadataColumnID == mapped.ID)
-                select new InputColumnMapping(null, mapped);
+                select new InputColumnMapping(null, mapped) );
 
-            mappings.AddRange(m);
-
-            return mappings;
+            return m;
         }
     }    
 }
