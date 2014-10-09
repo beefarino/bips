@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Bips by beefarino</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Bips</h1>
+        <p>PowerShell module for SSIS package management</p>
+
+        <p class="view"><a href="https://github.com/beefarino/bips">View the Project on GitHub <small>beefarino/bips</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/beefarino/bips/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/beefarino/bips/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/beefarino/bips">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h1>
+
+<p>BIPS is a PowerShell module for SSIS package management.  The goal of this project is to bring a devops workflow to working with SSIS packages.</p>
+
+<h2>
+<a name="how-you-can-help" class="anchor" href="#how-you-can-help"><span class="octicon octicon-link"></span></a>How You Can Help</h2>
+
+<p>At the moment, the biggest help would be for you to describe specific use cases as issues on this project.</p>
+
+<h1>
+<a name="building-and-installing" class="anchor" href="#building-and-installing"><span class="octicon octicon-link"></span></a>Building and Installing</h1>
+
+<h2>
+<a name="prerequisites" class="anchor" href="#prerequisites"><span class="octicon octicon-link"></span></a>Prerequisites</h2>
+
+<p>To build the BIPS module, you will need the following:</p>
+
+<ol>
+<li>The psake module (<a href="https://github.com/psake/psake">https://github.com/psake/psake</a>)</li>
+<li>.NET 4.5 SDK</li>
+</ol>
+
+<h2>
+<a name="running-the-build-and-install" class="anchor" href="#running-the-build-and-install"><span class="octicon octicon-link"></span></a>Running the Build and Install</h2>
+
+<p>To install the module from source, execute the following from a PowerShell prompt located at the root of the BIPS source tree:</p>
+
+<div class="highlight highlight-powershell"><pre><span class="nb">invoke-psake</span> <span class="p">./</span><span class="k">default</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-task</span> <span class="n">install</span>
+</pre></div>
+
+<h1>
+<a name="basic-use" class="anchor" href="#basic-use"><span class="octicon octicon-link"></span></a>Basic Use</h1>
+
+<p>Once installed, you pull the BIPS module in to your current PowerShell session using the standard import-module cmdlet:</p>
+
+<div class="highlight highlight-powershell"><pre><span class="nb">import-module</span> <span class="n">bips</span>
+</pre></div>
+
+<p>The BIPS module exposes a PSProvider that allows you to mount one or more SSIS packages as a PowerShell drive.  Once mounted, these packages can be navigated and manipulated as if they were folders and files on your hard drive.</p>
+
+<h2>
+<a name="mounting-packages" class="anchor" href="#mounting-packages"><span class="octicon octicon-link"></span></a>Mounting Packages</h2>
+
+<p>BIPS offers three ways to mount packages:</p>
+
+<ol>
+<li>Mount a single local dtsx package file</li>
+<li>Mount all dtsx files found in a local folder</li>
+<li>Mount all packages deployed to a specified SQL server; this option will mount packages deployed to the database or the filesystem.</li>
+</ol>
+
+<p>In all cases, you use the built-in new-psdrive cmdlet to mount the package(s):</p>
+
+<div class="highlight highlight-powershell"><pre><span class="nb">new-psdrive</span> <span class="n">-name</span> <span class="n">p</span> <span class="n">-psprovider</span> <span class="n">bips</span> <span class="n">-root</span> <span class="s1">'&lt;rootpath&gt;'</span>
+</pre></div>
+
+<p>The drive will contain different packages based on the value secified for , which must be one of the following:</p>
+
+<ol>
+<li>The full path to a local dtsx file</li>
+<li>The full path to a local folder containing one or more dtsx files</li>
+<li>The name of the SQL Server instance to which to connect</li>
+</ol>
+
+<p>For example, this command mounts all packages in the specified folder as the P drive:</p>
+
+<div class="highlight highlight-powershell"><pre><span class="nb">new-psdrive</span> <span class="n">-name</span> <span class="n">p</span> <span class="n">-psprovider</span> <span class="n">bips</span> <span class="n">-root</span> <span class="s1">'c:\myEtlProjects\'</span>
+</pre></div>
+
+<h2>
+<a name="navigating-packages" class="anchor" href="#navigating-packages"><span class="octicon octicon-link"></span></a>Navigating Packages</h2>
+
+<p>Once the drive is mounted, you can use the standard PowerShell provider cmdlets to move through the package object hierarchy.  In this example, the list of packages mounted on the P drive is listed:</p>
+
+<div class="highlight highlight-powershell"><pre><span class="n">dir</span> <span class="n">p</span><span class="err">:</span><span class="p">\</span><span class="n">packages</span>
+<span class="n">cd</span> <span class="n">p</span><span class="err">:</span><span class="p">\</span><span class="n">packages</span><span class="p">\</span><span class="n">myEtlPackage</span><span class="p">\</span><span class="n">executables</span>
+<span class="n">dir</span> <span class="p">|</span> <span class="nb">get-expression</span> <span class="p">|</span> <span class="n">where</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Property</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s1">'Description'</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">set-expression</span> <span class="n">-value</span> <span class="s2">"'LAST UPDATE: ' + (DT_WSTR,32)GETDATE()"</span><span class="p">;</span>
+</pre></div>
+
+<h2>
+<a name="custom-bips-commands" class="anchor" href="#custom-bips-commands"><span class="octicon octicon-link"></span></a>Custom BIPS Commands</h2>
+
+<p>To get a list of custom commands shipped with BIPS, use the following command:</p>
+
+<div class="highlight highlight-powershell"><pre><span class="nb">get-command</span> <span class="n">-module</span> <span class="n">bips</span>
+</pre></div>
+
+<p>Custom commands include full documentation, which can be accessed using the get-help command.  In this sample, the complete help for the get-expression BIPS custom command is retrieved.</p>
+
+<div class="highlight highlight-powershell"><pre><span class="nb">get-help</span> <span class="nb">get-expression</span> <span class="n">-full</span>
+</pre></div>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/beefarino">beefarino</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
