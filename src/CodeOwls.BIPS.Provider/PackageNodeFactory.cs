@@ -42,8 +42,7 @@ namespace CodeOwls.BIPS
             var logs = _package.LogProviders.Cast<LogProvider>();
             children.Add( new CollectionNodeFactory<LogProvider>("LogProviders",logs, l=>new ObjectNodeFactory<LogProvider>(l,()=>l.Name)));
 
-            var preconstraints = _package.PrecedenceConstraints.Cast<PrecedenceConstraint>();
-            children.Add(new CollectionNodeFactory<PrecedenceConstraint>("PrecedenceConstraints", preconstraints, p => new ObjectNodeFactory<PrecedenceConstraint>(p, () => p.Name)));
+            children.Add(new PrecedenceConstraintCollectionNodeFactory("PrecedenceConstraints", _package.PrecedenceConstraints, _package.Executables, p => new ObjectNodeFactory<PrecedenceConstraint>(p, () => p.Name)));
 
             var properties = _package.Properties.Cast<DtsProperty>();
             children.Add(new CollectionNodeFactory<DtsProperty>("Properties", properties, p => new ObjectNodeFactory<DtsProperty>(p, () => p.Name)));

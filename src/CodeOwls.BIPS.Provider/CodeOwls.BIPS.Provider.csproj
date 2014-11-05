@@ -81,6 +81,7 @@
     <Compile Include="DtsErrorNodeFactory.cs" />
     <Compile Include="DtsEventHandlerNodeFactory.cs" />
     <Compile Include="DtsNameObjectNodeFactory.cs" />
+    <Compile Include="ExecutableCollectionNodeFactory.cs" />
     <Compile Include="ExecutableNodeFactory.cs" />
     <Compile Include="ExtendedPropertyNodeFactory.cs" />
     <Compile Include="GetDeployedPackageCmdet.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="PackageInfoNodeFactory.cs" />
     <Compile Include="PackageNodeFactory.cs" />
     <Compile Include="PathNodeProcessor.cs" />
+    <Compile Include="PrecedenceConstraintCollectionNodeFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proxies.cs" />
     <Compile Include="SsisFolderNodeFactory.cs" />
