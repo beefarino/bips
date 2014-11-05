@@ -1264,7 +1264,11 @@
             <Width>10</Width>
           </TableColumnHeader>
           <TableColumnHeader>
-            <Label>Expression</Label>
+            <Label>From</Label>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>To</Label>
             <Alignment>left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
@@ -1283,7 +1287,10 @@
                 <PropertyName>SSItemMode</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>Expression</PropertyName>
+                <ScriptBlock>$_.PrecedenceExecutable.Name</ScriptBlock>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>$_.ConstrainedExecutable.Name</ScriptBlock>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>Value</PropertyName>

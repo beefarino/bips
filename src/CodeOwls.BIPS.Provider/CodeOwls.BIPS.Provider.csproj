@@ -79,8 +79,10 @@
     <Compile Include="DataTypeInfoObjectNodeFactory.cs" />
     <Compile Include="DbProviderInfoNodeFactory.cs" />
     <Compile Include="DtsErrorNodeFactory.cs" />
+    <Compile Include="DtsEventHandlerNodeFactory.cs" />
     <Compile Include="DtsNameObjectNodeFactory.cs" />
     <Compile Include="ExecutableNodeFactory.cs" />
+    <Compile Include="ExtendedPropertyNodeFactory.cs" />
     <Compile Include="GetDeployedPackageCmdet.cs" />
     <Compile Include="InputColumnMappingNodeFactory.cs" />
     <Compile Include="LogProviderInfoNodeFactory.cs" />

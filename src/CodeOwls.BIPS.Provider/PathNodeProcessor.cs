@@ -57,7 +57,13 @@ namespace CodeOwls.BIPS
                 _root = new BipsRootNodeFactory(driveInfo);
             }
 
-            var nodes = base.ResolvePath(context, path).ToList();
+            var nodes = base.ResolvePath(context, path);
+            if (null == nodes || !nodes.Any())
+            {
+                return nodes;
+            }
+
+            nodes = nodes.ToList();
 
             PathCache.Add( path, nodes );
 
