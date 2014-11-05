@@ -1,3 +1,6 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/6hv5c0mo4fomdwug?svg=true)](https://ci.appveyor.com/project/beefarino/bips)
+
+[![Module Zip](https://ci.appveyor.com/app/images/artifact-zip.png)Download Module Zip](https://ci.appveyor.com/project/beefarino/bips/build/artifacts)
 # Overview
 
 BIPS is a PowerShell module for SSIS package management.  The goal of this project is to bring a devops workflow to working with SSIS packages.
