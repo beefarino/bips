@@ -24,6 +24,7 @@ namespace CodeOwls.BIPS
         private const string Failure = "Failure";
         private const string Completion = "Completion";
         private const string Cancel = "Cancel";
+        
         public IEnumerable<string> NewItemTypeNames
         {
             get

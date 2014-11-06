@@ -115,7 +115,7 @@ function get-packagePath
 
     process {
         
-        if( $path -notmatch 'packages\\([^\\]+)\\.+' )
+        if( $path -notmatch 'packages\\([^\\]+)(\\.+)?' )
         {
             return;
         }
@@ -338,6 +338,116 @@ function set-expression
     LASTEDIT: 10/01/2014 15:24:36
 #> 
 }
+
+
+function get-precedenceConstraint
+{
+    param(
+        [Parameter(Mandatory=$false, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [Alias("pspath")]
+        [string]
+        # a path to a BIPS drive element
+        $path,
+
+        [Parameter(Mandatory=$false)]
+        [string]
+        # 
+        $from = '.*',
+
+        [Parameter(Mandatory=$false)]
+        [string]
+        # 
+        $to = '.*',
+
+        [Parameter(Mandatory=$false)]
+        [string]
+        # 
+        $value = '.*'
+    );
+
+    process {
+        if( $path )
+        {
+            $items = @(get-item $path);
+            $component = $items | get-component
+            $package = $items | get-package;
+        
+            $componentName = '.';
+            if( $component )
+            {
+                $componentName = $component.Name;
+            }
+            
+            write-debug "Component name to match on constraints: $componentName";
+
+            $package | join-path -child "PrecedenceConstraints" | dir | where { 
+                ( ( ( $_.From -match $from ) -and ( $_.To -match $componentName ) ) -or
+                ( ( $_.To -match $to ) -and ( $_.From -match $componentName ) ) ) -and
+                ($_.Value -match $value) 
+            }
+        }    
+        else
+        {
+            $packages = dir /packages;
+            $packages | join-path -child "PrecedenceConstraints" | dir | where { 
+                ( $_.From -match $from ) -and 
+                ($_.To -match $to) -and
+                ($_.Value -match $value) 
+            }
+        }    
+    }
+<# 
+   .SYNOPSIS 
+    Retrieves the precedence constraints that match the specified criteria.
+
+   .DESCRIPTION
+    Retrieves the precedence constraints that match the specified criteria.
+
+    The constraints are specified via a combination of the path, to, from, and
+    value parameters.  When path is specified, it is assumed that the caller
+    is requesting all constraints that apply to the task represented in the 
+    path.  This will include incoming (precedent) and outgoing (execution) 
+    constraints.
+
+    The to and from parameters allow you to filter the execution and precedent
+    constraints, respectively.  By default all constraints are matched.
+
+    The value parameter allows you to filter on the constraint flavor - either
+    Success, Failure, Completion, or Cancel.
+
+    The to, from, and value parameters accept regular expression patterns as
+    values.
+
+   .EXAMPLE 
+    get-item . | get-precedenceConstraint
+
+    Retrieves all precedence constraints that apply to the task associated 
+    with the current location.
+
+    .EXAMPLE 
+    get-item . | get-precedenceConstraint -from 'Test'
+
+    Retrieves all precedence constraints with a name that contains the phrase "Test" and
+    that apply to the task associated with the current location.
+    
+    .EXAMPLE 
+    get-precedenceConstraint
+
+    Retrieves all precedence constraints across all loaded packages.
+
+    .EXAMPLE 
+    get-precedenceConstraint -from 'data flow'
+
+    Retrieves all precedence constraints across all loaded packages with a precedent
+    task whose name matches "data flow".
+
+    .NOTES
+    AUTHOR: beefarino
+    LASTEDIT: 11/06/2014 12:56:06
+#> 
+}
+
+
 
 function convertfrom-packageXml
 {
@@ -889,3 +999,15 @@ function select-packageXmlNode
     if($this.name -eq 'OpenRowset') { $this.value }
     else { $this.sqlstatementsource }
 };
+
+
+@(
+    'Microsoft.SqlServer.Dts.Runtime.PrecedenceConstraint'
+ ) | Update-TypeData -MemberType ScriptProperty -MemberName 'From' -value {
+    $this.PrecedenceExecutable.Name
+ };
+ @(
+    'Microsoft.SqlServer.Dts.Runtime.PrecedenceConstraint'
+ ) | Update-TypeData -MemberType ScriptProperty -MemberName 'To' -value {
+    $this.ConstrainedExecutable.Name
+ };
