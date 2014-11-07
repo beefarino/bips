@@ -55,13 +55,8 @@ namespace CodeOwls.BIPS
             if (! map.ContainsKey(itemTypeName))
             {
                 throw new ArgumentException( String.Format( 
-                    @"The specified item type '{0}' is not valid.  Please use one of the following values:
-  {1}
-  {2}
-  {3}
-  {4}
-", 
-                    itemTypeName, Success,Failure,Completion,Cancel));
+@"The specified item type '{0}' is not valid.  Please use one of the following values: {1}", 
+                    itemTypeName, String.Join( ", ", NewItemTypeNames)));
             }
 
             var valueType = newItemValue.GetType();

@@ -19,9 +19,13 @@ namespace CodeOwls.BIPS
         {
             var nodes = new List<INodeFactory>();
 
-            
-            var executables = _input.Executables.Cast<Executable>().ToList();
-            nodes.Add(new CollectionNodeFactory<Executable>("Executables", executables, c => new ExecutableNodeFactory(c, _input.Executables)));
+            nodes.Add(new ExecutableCollectionNodeFactory("Executables", _input.Executables, c => new ExecutableNodeFactory(c, _input.Executables)));
+
+            nodes.Add(new PrecedenceConstraintCollectionNodeFactory(
+                "PrecedenceConstraints", 
+                _input.PrecedenceConstraints,
+                _input.Executables,
+                c => new ObjectNodeFactory<PrecedenceConstraint>(c, ()=>c.Name)));
 
             var props = _input.Properties.Cast<DtsProperty>().ToList();
             nodes.Add(new CollectionNodeFactory<DtsProperty>("Properties", props, c => new DtsPropertyNodeFactory(c)));
